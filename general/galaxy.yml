@@ -44,7 +44,7 @@ repository: https://github.com/betuxy/ansible_collection
 documentation:
 
 # The URL to the homepage of the collection/project
-homepage:
+homepage: https://github.com/betuxy/ansible_collection
 
 # The URL to the collection issue tracker
 issues: https://github.com/betuxy/ansible_collection/issues
