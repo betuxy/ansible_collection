@@ -1,0 +1,57 @@
+---
+- name: Remove existing systemd-network config files
+  block:
+    - name: Find existing systemd-network config files
+      ansible.builtin.find:
+        paths:
+          - /etc/systemd/networkd.conf.d/
+          - /etc/systemd/network/
+        patterns:
+          - "*.link"
+          - "*.netdev"
+          - "*.network"
+      register: systemd_network_existing_config_files
+
+    - name: Remove config files that are not handled by this role
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop: "{{ systemd_network_existing_config_files['files'] | map(attribute='path') }}"
+      when:
+        - item | basename not in (_networkd_netdev + _networkd_link + _networkd_network)
+        - networkd_keep_existing_definitions is false
+      notify: Reload systemd-networkd
+      vars:
+        _networkd_netdev: "{{ networkd_netdev | map(attribute='name') | map('regex_replace', '^(.*)$', '30-\\1.netdev') }}"
+        _networkd_link: "{{ networkd_link | map(attribute='link_name') | map('regex_replace', '^(.*)$', '50-\\1.link') }}"
+        _networkd_network: "{{ networkd_network | map(attribute='name') | map('regex_replace', '^(.*)$', '70-\\1.network') }}"
+
+- name: Remove ifcfg and Networkmanager/system-connection files
+  block:
+    - name: Find ifcfg and NetworkManager config files
+      ansible.builtin.find:
+        paths:
+          - "/etc/sysconfig/network-scripts"
+          - "/etc/NetworkManager/system-connections"
+      register: _old_connection_files
+
+    - name: Remove ifcfg and NetworkManager config files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop: "{{ _old_connection_files['files'] | map(attribute='path') }}"
+
+
+- name: Ensure no udev rules about networkd managed interfaces exist in /etc/udev/rules.d
+  block:
+    - name: Look for conflicting rules files
+      ansible.builtin.command: "egrep -lR '(ens|enp|eth|enx|eno)*' /etc/udev/rules.d"
+      register: _grep_results
+      changed_when: false
+      failed_when: false
+
+    - name: Remove rules files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop: "{{ _grep_results['stdout_lines'] }}"

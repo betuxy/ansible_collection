@@ -1,0 +1,429 @@
+#jinja2:lstrip_blocks: True
+[NetDev]
+{% if item.description is defined %}
+Description={{ item.description }}
+{% endif %}
+Name={{ item.name }}
+Kind={{ item.kind }}
+{% if item.mtu is defined %}
+MTUBytes={{ item.mtu }}
+{% endif %}
+{% if item.mac_address is defined %}
+MACAddress={{ item.mac_address }}
+{% endif %}
+{% if item.kind == "bridge" %}
+
+[Bridge]
+{% if item.br_hello_time_sec is defined %}
+HelloTimeSec={{ item.br_hello_time_sec }}
+{% endif %}
+{% if item.br_max_age_sec is defined %}
+MaxAgeSec={{ item.br_max_age_sec }}
+{% endif %}
+{% if item.br_forward_delay_sec is defined %}
+ForwardDelaySec={{ item.br_forward_delay_sec }}
+{% endif %}
+{% if item.br_ageing_time_sec is defined %}
+AgeingTimeSec={{ item.br_ageing_time_sec }}
+{% endif %}
+{% if item.br_priority is defined %}
+Priority={{ item.br_priority }}
+{% endif %}
+{% if item.br_group_forward_mask is defined %}
+GroupForwardMask={{ item.br_group_forward_mask }}
+{% endif %}
+{% if item.br_default_pvid is defined %}
+DefaultPVID={{ item.br_default_pvid }}
+{% endif %}
+{% if item.br_multicast_querier is defined %}
+MulticastQuerier={{ item.br_multicast_querier }}
+{% endif %}
+{% if item.br_multicast_snooping is defined %}
+MulticastSnooping={{ item.br_multicast_snooping }}
+{% endif %}
+{% if item.br_vlan_filtering is defined %}
+VLANFiltering={{ item.br_vlan_filtering }}
+{% endif %}
+{% if item.br_vlan_protocol is defined %}
+VLANProtocol={{ item.br_vlan_protocol }}
+{% endif %}
+{% if item.br_stp is defined %}
+STP={{ item.br_stp }}
+{% endif %}
+{% if item.br_multicast_igmp_version is defined %}
+MulticastIGMPVersion={{ item.br_multicast_igmp_version }}
+{% endif %}
+{% endif %}
+{% if item.kind == "bond" %}
+
+[Bond]
+{% if item.bond_mode is defined %}
+Mode={{ item.bond_mode }}
+{% endif %}
+{% if item.bond_transmit_hash_policy is defined %}
+TransmitHashPolicy={{ item.bond_transmit_hash_policy }}
+{% endif %}
+{% if item.bond_lacp_transmit_rate is defined %}
+LACPTransmitRate={{ item.bond_lacp_transmit_rate }}
+{% endif %}
+{% if item.bond_mii_monitor_sec is defined %}
+MIIMonitorSec={{ item.bond_mii_monitor_sec }}
+{% endif %}
+{% if item.bond_up_delay_sec is defined %}
+UpDelaySec={{ item.bond_up_delay_sec }}
+{% endif %}
+{% if item.bond_down_delay_sec is defined %}
+DownDelaySec={{ item.bond_down_delay_sec }}
+{% endif %}
+{% if item.bond_learn_packet_interval_sec is defined %}
+LearnPacketIntervalSec={{ item.bond_learn_packet_interval_sec }}
+{% endif %}
+{% if item.bond_ad_select is defined %}
+AdSelect={{ item.bond_ad_select }}
+{% endif %}
+{% if item.bond_ad_actor_system_priority is defined %}
+AdActorSystemPriority={{ item.bond_ad_actor_system_priority }}
+{% endif %}
+{% if item.bond_ad_user_port_key is defined %}
+AdUserPortKey={{ item.bond_ad_user_port_key }}
+{% endif %}
+{% if item.bond_ad_actor_system is defined %}
+AdActorSystem={{ item.bond_ad_actor_system }}
+{% endif %}
+{% if item.bond_fail_over_mac_policy is defined %}
+FailOverMACPolicy={{ item.bond_fail_over_mac_policy }}
+{% endif %}
+{% if item.bond_arp_validate is defined %}
+ARPValidate={{ item.bond_arp_validate }}
+{% endif %}
+{% if item.bond_arp_interval_sec is defined %}
+ARPIntervalSec={{ item.bond_arp_interval_sec }}
+{% endif %}
+{% if item.bond_arp_ip_targets is defined %}
+ARPIPTargets={{ item.bond_arp_ip_targets }}
+{% endif %}
+{% if item.bond_arp_all_targets is defined %}
+ARPAllTargets={{ item.bond_arp_all_targets }}
+{% endif %}
+{% if item.bond_primary_reselect_policy is defined %}
+PrimaryReselectPolicy={{ item.bond_primary_reselect_policy }}
+{% endif %}
+{% if item.bond_resend_igmp is defined %}
+ResendIGMP={{ item.bond_resend_igmp }}
+{% endif %}
+{% if item.bond_packets_per_slave is defined %}
+PacketsPerSlave={{ item.bond_packets_per_slave }}
+{% endif %}
+{% if item.bond_gratuitous_arp is defined %}
+GratuitousARP={{ item.bond_gratuitous_arp }}
+{% endif %}
+{% if item.bond_all_slaves_active is defined %}
+AllSlavesActive={{ item.bond_all_slaves_active }}
+{% endif %}
+{% if item.bond_dynamic_transmit_load_balancing is defined %}
+DynamicTransmitLoadBalancing={{ item.bond_dynamic_transmit_load_balancing }}
+{% endif %}
+{% if item.bond_min_links is defined %}
+MinLinks={{ item.bond_min_links }}
+{% endif %}
+{% endif %}
+{% if item.kind == "vlan" %}
+
+[VLAN]
+{% if item.vlan_id is defined %}
+Id={{ item.vlan_id }}
+{% endif %}
+Protocol={{ item.vlan_protocol | d('802.1q') }}
+{% if item.vlan_gvrp is defined %}
+GVRP={{ item.vlan_gvrp }}
+{% endif %}
+{% if item.vlan_mvrp is defined %}
+MVRP={{ item.vlan_mvrp }}
+{% endif %}
+{% if item.vlan_loose_binding is defined %}
+LooseBinding={{ item.vlan_loose_binding }}
+{% endif %}
+{% if item.vlan_reorder_header is defined %}
+ReorderHeader={{ item.vlan_reorder_header }}
+{% endif %}
+{% if item.vlan_egress_qos_maps is defined %}
+EgressQOSMaps={{ item.vlan_egress_qos_maps }}
+{% endif %}
+{% if item.vlan_ingress_qos_maps is defined %}
+IngressQOSMaps={{ item.vlan_ingress_qos_maps }}
+{% endif %}
+{% endif %}
+{% if item.kind == 'macvlan' %}
+
+[MACVLAN]
+{% if item.macvlan_mode is defined %}
+Mode={{ item.macvlan_mode }}
+{% endif %}
+{% if item.macvlan_source_mac_address is defined %}
+SourceMACAddress={{ item.macvlan_source_mac_address }}
+{% endif %}
+{% if item.macvlan_broadcast_multicast_queue_length is defined %}
+BroadcastMulticastQueueLength={{ item.macvlan_broadcast_multicast_queue_length }}
+{% endif %}
+{% endif %}
+{% if item.kind == "vxlan" %}
+
+[VXLAN]
+{% if item.vxlan_vni is defined %}
+VNI={{ item.vxlan_vni }}
+{% endif %}
+{% if item.vxlan_remote is defined %}
+Remote={{ item.vxlan_remote }}
+{% endif %}
+{% if item.vxlan_local is defined %}
+Local={{ item.vxlan_local }}
+{% endif %}
+{% if item.vxlan_group is defined %}
+Group={{ item.vxlan_group }}
+{% endif %}
+{% if item.vxlan_tos is defined %}
+TOS={{ item.vxlan_tos }}
+{% endif %}
+{% if item.vxlan_ttl is defined %}
+TTL={{ item.vxlan_ttl }}
+{% endif %}
+{% if item.vxlan_mac_learning is defined %}
+MacLearning={{ item.vxlan_mac_learning }}
+{% endif %}
+{% if item.vxlan_fdb_ageing_sec is defined %}
+FDBAgeingSec={{ item.vxlan_fdb_ageing_sec }}
+{% endif %}
+{% if item.vxlan_maximum_fdb_entries is defined %}
+MaximumFDBEntries={{ item.vxlan_maximum_fdb_entries }}
+{% endif %}
+{% if item.vxlan_reduce_arp_proxy is defined %}
+ReduceARPProxy={{ item.vxlan_reduce_arp_proxy }}
+{% endif %}
+{% if item.vxlan_l2_miss_notification is defined %}
+L2MissNotification={{ item.vxlan_l2_miss_notification }}
+{% endif %}
+{% if item.vxlan_l3_miss_notification is defined %}
+L3MissNotification={{ item.vxlan_l3_miss_notification }}
+{% endif %}
+{% if item.vxlan_route_short_circuit is defined %}
+RouteShortCircuit={{ item.vxlan_route_short_circuit }}
+{% endif %}
+{% if item.vxlan_udp_checksum is defined %}
+UDPChecksum={{ item.vxlan_udp_checksum }}
+{% endif %}
+{% if item.vxlan_udp6_zero_checksum_tx is defined %}
+UDP6ZeroChecksumTx={{ item.vxlan_udp6_zero_checksum_tx }}
+{% endif %}
+{% if item.vxlan_udp6_zero_checksum_rx is defined %}
+UDP6ZeroChecksumRx={{ item.vxlan_udp6_zero_checksum_rx }}
+{% endif %}
+{% if item.vxlan_remote_checksum_tx is defined %}
+RemoteChecksumTx={{ item.vxlan_remote_checksum_tx }}
+{% endif %}
+{% if item.vxlan_remote_checksum_rx is defined %}
+RemoteChecksumRx={{ item.vxlan_remote_checksum_rx }}
+{% endif %}
+{% if item.vxlan_group_policy_extension is defined %}
+GroupPolicyExtension={{ item.vxlan_group_policy_extension }}
+{% endif %}
+{% if item.vxlan_generic_protocol_extension is defined %}
+GenericProtocolExtension={{ item.vxlan_generic_protocol_extension }}
+{% endif %}
+{% if item.vxlan_destination_port is defined %}
+DestinationPort={{ item.vxlan_destination_port }}
+{% endif %}
+{% if item.vxlan_port_range is defined %}
+PortRange={{ item.vxlan_port_range }}
+{% endif %}
+{% if item.vxlan_flow_label is defined %}
+FlowLabel={{ item.vxlan_flow_label }}
+{% endif %}
+{% if item.vxlan_ip_do_not_fragment is defined %}
+IPDoNotFragment={{ item.vxlan_ip_do_not_fragment }}
+{% endif %}
+{% if item.vxlan_independent is defined %}
+Independent={{ item.vxlan_independent }}
+{% endif %}
+{% endif %}
+{% if item.kind == "l2tp" %}
+
+[L2TP]
+{% if item.l2tp_tunnel_id is defined %}
+TunnelId={{ item.l2tp_tunnel_id }}
+{% endif %}
+{% if item.l2tp_peer_tunnel_id is defined %}
+PeerTunnelId={{ item.l2tp_peer_tunnel_id }}
+{% endif %}
+{% if item.l2tp_remote is defined %}
+Remote={{ item.l2tp_remote }}
+{% endif %}
+{% if item.l2tp_local is defined %}
+Local={{ item.l2tp_local }}
+{% endif %}
+{% if item.l2tp_encapsulation_type is defined %}
+EncapsulationType={{ item.l2tp_encapsulation_type }}
+{% endif %}
+{% if item.l2tp_udp_source_port is defined %}
+UDPSourcePort={{ item.l2tp_udp_source_port }}
+{% endif %}
+{% if item.l2tp_udp_destination_port is defined %}
+UDPDestinationPort={{ item.l2tp_udp_destination_port }}
+{% endif %}
+{% if item.l2tp_udp_checksum is defined %}
+UDPChecksum={{ item.l2tp_udp_checksum }}
+{% endif %}
+{% if item.l2tp_udp6_zero_checksum_tx is defined %}
+UDP6ZeroChecksumTx={{ item.l2tp_udp6_zero_checksum_tx }}
+{% endif %}
+{% if item.l2tp_udp6_zero_checksum_rx is defined %}
+UDP6ZeroChecksumRx={{ item.l2tp_udp6_zero_checksum_rx }}
+{% endif %}
+{% endif %}
+{% if item.kind == "l2tp" %}
+
+[L2TPSession]
+{% if item.l2tpsession_name is defined %}
+Name={{ item.l2tpsession_name }}
+{% endif %}
+{% if item.l2tpsession_session_id is defined %}
+SessionId={{ item.l2tpsession_session_id }}
+{% endif %}
+{% if item.l2tpsession_peer_session_id is defined %}
+PeerSessionId={{ item.l2tpsession_peer_session_id }}
+{% endif %}
+{% if item.l2tpsession_layer2_specific_header is defined %}
+Layer2SpecificHeader={{ item.l2tpsession_layer2_specific_header }}
+{% endif %}
+{% endif %}
+{% if item.kind in ['ipip', 'sit', 'gre', 'gretap', 'ip6gre', 'ip6gretap', 'vti', 'vti6', 'ip6tnl', 'erspan'] %}
+
+[Tunnel]
+{% if item.tunnel_external is defined %}
+External={{ item.tunnel_external }}
+{% endif %}
+{% if item.tunnel_local is defined %}
+Local={{ item.tunnel_local }}
+{% endif %}
+{% if item.tunnel_remote is defined %}
+Remote={{ item.tunnel_remote }}
+{% endif %}
+{% if item.tunnel_tos is defined %}
+TOS={{ item.tunnel_tos }}
+{% endif %}
+{% if item.tunnel_ttl is defined %}
+TTL={{ item.tunnel_ttl }}
+{% endif %}
+{% if item.tunnel_discover_path_mtu is defined %}
+DiscoverPathMTU={{ item.tunnel_discover_path_mtu }}
+{% endif %}
+{% if item.tunnel_ignore_dont_fragment is defined %}
+IgnoreDontFragment={{ item.tunnel_ignore_dont_fragment }}
+{% endif %}
+{% if item.tunnel_ipv6_flow_label is defined %}
+IPv6FlowLabel={{ item.tunnel_ipv6_flow_label }}
+{% endif %}
+{% if item.tunnel_copy_dscp is defined %}
+CopyDSCP={{ item.tunnel_copy_dscp }}
+{% endif %}
+{% if item.tunnel_encapsulation_limit is defined %}
+EncapsulationLimit={{ item.tunnel_encapsulation_limit }}
+{% endif %}
+{% if item.tunnel_key is defined %}
+Key={{ item.tunnel_key }}
+{% endif %}
+{% if item.tunnel_input_key is defined %}
+InputKey={{ item.tunnel_input_key }}
+{% endif %}
+{% if item.tunnel_output_key is defined %}
+OutputKey={{ item.tunnel_output_key }}
+{% endif %}
+{% if item.tunnel_mode is defined %}
+Mode={{ item.tunnel_mode }}
+{% endif %}
+{% if item.tunnel_independent is defined %}
+Independent={{ item.tunnel_independent }}
+{% endif %}
+{% if item.tunnel_assign_to_loopback is defined %}
+AssignToLoopback={{ item.tunnel_assign_to_loopback }}
+{% endif %}
+{% if item.tunnel_allow_local_remote is defined %}
+AllowLocalRemote={{ item.tunnel_allow_local_remote }}
+{% endif %}
+{% if item.tunnel_foo_over_udp is defined %}
+FooOverUDP={{ item.tunnel_foo_over_udp }}
+{% endif %}
+{% if item.tunnel_fou_destination_port is defined %}
+FOUDestinationPort={{ item.tunnel_fou_destination_port }}
+{% endif %}
+{% if item.tunnel_fou_source_port is defined %}
+FOUSourcePort={{ item.tunnel_fou_source_port }}
+{% endif %}
+{% if item.tunnel_encapsulation is defined %}
+Encapsulation={{ item.tunnel_encapsulation }}
+{% endif %}
+{% if item.tunnel_ipv6_rapid_deployment_prefix is defined %}
+IPv6RapidDeploymentPrefix={{ item.tunnel_ipv6_rapid_deployment_prefix }}
+{% endif %}
+{% if item.tunnel_isatap is defined %}
+ISATAP={{ item.tunnel_isatap }}
+{% endif %}
+{% if item.tunnel_serialize_tunneled_packets is defined %}
+SerializeTunneledPackets={{ item.tunnel_serialize_tunneled_packets }}
+{% endif %}
+{% if item.tunnel_erspan_version is defined %}
+ERSPANVersion={{ item.tunnel_erspan_version }}
+{% endif %}
+{% if item.tunnel_erspan_index is defined %}
+ERSPANIndex={{ item.tunnel_erspan_index }}
+{% endif %}
+{% if item.tunnel_erspan_direction is defined %}
+ERSPANDirection={{ item.tunnel_erspan_direction }}
+{% endif %}
+{% if item.tunnel_erspan_hardware_id is defined %}
+ERSPANHardwareId={{ item.tunnel_erspan_hardware_id }}
+{% endif %}
+{% endif %}
+{% if item.kind == "tun" %}
+
+[Tun]
+{% if item.tun_multi_queue is defined %}
+MultiQueue={{ item.tun_multi_queue }}
+{% endif %}
+{% if item.tun_packet_info is defined %}
+PacketInfo={{ item.tun_packet_info }}
+{% endif %}
+{% if item.tun_vnet_header is defined %}
+VNetHeader={{ item.tun_vnet_header }}
+{% endif %}
+{% if item.tun_user is defined %}
+User={{ item.tun_user }}
+{% endif %}
+{% if item.tun_group is defined %}
+Group={{ item.tun_group }}
+{% endif %}
+{% if item.tun_keep_carrier is defined %}
+KeepCarrier={{ item.tun_keep_carrier }}
+{% endif %}
+{% endif %}
+{% if item.kind == "tap" %}
+
+[Tap]
+{% if item.tap_multi_queue is defined %}
+MultiQueue={{ item.tap_multi_queue }}
+{% endif %}
+{% if item.tap_packet_info is defined %}
+PacketInfo={{ item.tap_packet_info }}
+{% endif %}
+{% if item.tap_vnet_header is defined %}
+VNetHeader={{ item.tap_vnet_header }}
+{% endif %}
+{% if item.tap_user is defined %}
+User={{ item.tap_user }}
+{% endif %}
+{% if item.tap_group is defined %}
+Group={{ item.tap_group }}
+{% endif %}
+{% if item.tap_keep_carrier is defined %}
+KeepCarrier={{ item.tap_keep_carrier }}
+{% endif %}
+{% endif %}

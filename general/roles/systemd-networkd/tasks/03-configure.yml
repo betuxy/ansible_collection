@@ -1,0 +1,50 @@
+---
+- name: Create .netdev config files
+  ansible.builtin.template:
+    src: netdev.j2
+    dest: "{{ networkd_conf_dir }}/30-{{ item.name }}.netdev"
+    mode: "0644"
+  loop: "{{ networkd_netdev }}"
+  register: _netdev_configured
+  when: networkd_netdev | length > 0
+  notify: Reload systemd-networkd
+
+- name: Create .link config files
+  ansible.builtin.template:
+    src: link.j2
+    dest: "{{ networkd_conf_dir }}/50-{{ item.link_name }}.link"
+    mode: "0644"
+  loop: "{{ networkd_link }}"
+  when: networkd_link | length > 0
+  notify: Reload systemd-networkd
+  register: _link_configured
+
+- name: Create .network config files
+  ansible.builtin.template:
+    src: network.j2
+    dest: "{{ networkd_conf_dir }}/70-{{ item.name }}.network"
+    mode: "0644"
+  loop: "{{ networkd_network }}"
+  when: networkd_network | length > 0
+  notify: Reload systemd-networkd
+
+- name: Reload network drivers
+  block:
+    - name: Gather network drivers
+      ansible.builtin.set_fact:
+        network_drivers: "{{ network_drivers + [ ansible_facts[item | regex_replace('-', '_')]['module'] ] }}"
+      loop: "{{ ansible_interfaces }}"
+      when:
+        - ansible_facts[item | regex_replace('-', '_')]['module'] is defined
+        - networkd_reload_kernel_mods
+
+    - name: Remove and reload network kernel modules to update interface names
+      ansible.builtin.shell: >
+          modprobe -ra {{ driver_list }} &&
+          modprobe -a {{ driver_list }} &&
+          systemctl restart systemd-networkd
+      vars:
+        driver_list: "{{ network_drivers | flatten | unique | join(' ') }}"
+      when:
+        - network_drivers | flatten | unique | length > 0
+        - networkd_reload_kernel_mods

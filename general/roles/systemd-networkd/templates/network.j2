@@ -1,0 +1,579 @@
+#jinja2:lstrip_blocks: True
+[Match]
+{% if item.mac_address is defined %}
+#Name={{ item.name }}
+MACAddress={{ item.mac_address }}
+{% elif item.name is defined %}
+Name={{ item.name }}
+{% endif %}
+{% if item.permanent_mac_address is defined %}
+PermanentMACAddress={{ item.permanent_mac_address }}
+{% endif %}
+{% if item.path is defined %}
+Path={{ item.path }}
+{% endif %}
+{% if item.driver is defined %}
+Driver={{ item.driver }}
+{% endif %}
+{% if item.type is defined %}
+Type={{ item.type }}
+{% endif %}
+{% if item.kind is defined %}
+Kind={{ item.kind }}
+{% endif %}
+
+[Network]
+{% if item.description is defined %}
+Description={{ item.description }}
+{% endif %}
+{% if item.dhcp is defined %}
+DHCP={{ item.dhcp }}
+{% endif %}
+{% if item.dhcp_server is defined %}
+DHCPServer={{ item.dhcp_server }}
+{% endif %}
+{% if item.link_local_addressing is defined %}
+LinkLocalAddressing={{ item.link_local_addressing }}
+{% endif %}
+{% if item.default_route_on_device is defined %}
+DefaultRouteOnDevice={{ item.default_route_on_device }}
+{% endif %}
+{% if item.llmnr is defined %}
+LLMNR={{ item.llmnr }}
+{% endif %}
+{% if item.multicast_dns is defined %}
+MulticastDNS={{ item.multicast_dns }}
+{% endif %}
+{% if item.dns_over_tls is defined %}
+DNSOverTLS={{ item.dns_over_tls }}
+{% endif %}
+{% if item.dnssec is defined %}
+DNSSEC={{ item.dnssec }}
+{% endif %}
+{% if item.dnssec_negative_trust_anchors is defined %}
+DNSSECNegativeTrustAnchors={{ item.dnssec_negative_trust_anchors }}
+{% endif %}
+{% if item.lldp is defined %}
+LLDP={{ item.lldp }}
+{% endif %}
+{% if item.emit_lldp is defined %}
+EmitLLDP={{ item.emit_lldp }}
+{% endif %}
+{% if item.bind_carrier is defined %}
+BindCarrier={{ item.bind_carrier }}
+{% endif %}
+{% if item.address is defined and item.address is iterable and item.address is not string %}
+{% for addr in item.address %}
+Address={{ addr }}
+{% endfor %}
+{% elif item.address is defined %}
+Address={{ item.address }}
+{% endif %}
+{% if item.gateway is defined %}
+Gateway={{ item.gateway }}
+{% endif %}
+{% if item.gateway6 is defined %}
+Gateway={{ item.gateway6 }}
+{% endif %}
+{% if item.dns is defined %}
+DNS={% for dns_srv in item.dns %}{{ dns_srv }} {% endfor %}
+
+{% endif %}
+{% if item.domains is defined %}
+Domains={% for domain in item.domains %}{{ domain }} {% endfor %}
+
+{% endif %}
+{% if item.dns_default_route is defined %}
+DNSDefaultRoute={{ item.dns_default_route }}
+{% endif %}
+{% if item.ntp is defined %}
+NTP={{ item.ntp }}
+{% endif %}
+{% if item.ip_forward is defined %}
+IPForward={{ item.ip_forward }}
+{% endif %}
+{% if item.ip_masquerade is defined %}
+IPMasquerade={{ item.ip_masquerade }}
+{% endif %}
+{% if item.ipv4_ll_start_address is defined %}
+IPv4LLStartAddress={{ item.ipv4_ll_start_address }}
+{% endif %}
+{% if item.ipv4_ll_route is defined %}
+IPv4LLRoute={{ item.ipv4_ll_route }}
+{% endif %}
+{% if item.ipv4_accept_local is defined %}
+IPv4AcceptLocal={{ item.ipv4_accept_local }}
+{% endif %}
+{% if item.ipv4_route_localnet is defined %}
+IPv4RouteLocalnet={{ item.ipv4_route_localnet }}
+{% endif %}
+{% if item.ipv6_privacy_extensions is defined %}
+IPv6PrivacyExtensions={{ item.ipv6_privacy_extensions }}
+{% endif %}
+{% if item.ipv6_accept_ra is defined %}
+IPv6AcceptRA={{ item.ipv6_accept_ra }}
+{% endif %}
+{% if item.ipv6_duplicate_address_detection is defined %}
+IPv6DuplicateAddressDetection={{ item.ipv6_duplicate_address_detection }}
+{% endif %}
+{% if item.ipv6_hop_limit is defined %}
+IPv6HopLimit={{ item.ipv6_hop_limit }}
+{% endif %}
+{% if item.ipv6_link_local_address_generation_mode is defined %}
+IPv6LinkLocalAddressGenerationMode={{ item.ipv6_link_local_address_generation_mode }}
+{% endif %}
+{% if item.ipv6_stable_secret_address is defined %}
+IPv6StableSecretAddress={{ item.ipv6_stable_secret_address }}
+{% endif %}
+{% if item.ipv4_proxy_arp is defined %}
+IPv4ProxyARP={{ item.ipv4_proxy_arp }}
+{% endif %}
+{% if item.ipv6_proxy_ndp is defined %}
+IPv6ProxyNDP={{ item.ipv6_proxy_ndp }}
+{% endif %}
+{% if item.ipv6_proxy_ndp_address is defined %}
+IPv6ProxyNDPAddress={{ item.ipv6_proxy_ndp_address }}
+{% endif %}
+{% if item.ipv6_send_ra is defined %}
+IPv6SendRA={{ item.ipv6_send_ra }}
+{% endif %}
+{% if item.ipv6_mtu_bytes is defined %}
+IPv6MTUBytes={{ item.ipv6_mtu_bytes }}
+{% endif %}
+{% if item.dhcp_prefix_delegation is defined %}
+DHCPPrefixDelegation={{ item.dhcp_prefix_delegation }}
+{% endif %}
+{% if item.keep_master is defined %}
+KeepMaster={{ item.keep_master }}
+{% endif %}
+{% if item.batman_advanced is defined %}
+BatmanAdvanced={{ item.batman_advanced }}
+{% endif %}
+{% if item.bond is defined %}
+Bond={{ item.bond }}
+{% endif %}
+{% if item.bridge is defined %}
+Bridge={{ item.bridge }}
+{% endif %}
+{% if item.vrf is defined %}
+VRF={{ item.vrf }}
+{% endif %}
+{% if item.ip_o_ib is defined %}
+IPoIB={{ item.ip_o_ib }}
+{% endif %}
+{% if item.ipvlan is defined and item.ipvlan is iterable and item.ipvlan is not string %}
+    {% for ipvlan in item.ipvlan %}
+IPVLAN={{ ipvlan }}
+    {% endfor %}
+{% elif item.ipvlan is defined %}
+IPVLAN={{ item.ipvlan }}
+{% endif %}
+{% if item.ipvtap is defined %}
+IPVTAP={{ item.ipvtap }}
+{% endif %}
+{% if item.macsec is defined %}
+MACsec={{ item.macsec }}
+{% endif %}
+{% if item.macvlan is defined %}
+MACVLAN={{ item.macvlan }}
+{% endif %}
+{% if item.macvtap is defined %}
+MACVTAP={{ item.macvtap }}
+{% endif %}
+{% if item.tunnel is defined %}
+Tunnel={{ item.tunnel }}
+{% endif %}
+{% if item.vlan is defined and item.vlan is iterable and item.vlan is not string %}
+    {% for vlan in item.vlan %}
+VLAN={{ vlan }}
+    {% endfor %}
+{% elif item.vlan is defined %}
+VLAN={{ item.vlan }}
+{% endif %}
+{% if item.vxlan is defined and item.vxlan is iterable and item.vxlan is not string %}
+    {% for vxlan in item.vxlan %}
+VXLAN={{ vxlan }}
+    {% endfor %}
+{% elif item.vxlan is defined %}
+VXLAN={{ item.vxlan }}
+{% endif %}
+{% if item.xfrm is defined %}
+Xfrm={{ item.xfrm }}
+{% endif %}
+{% if item.active_slave is defined %}
+ActiveSlave={{ item.active_slave }}
+{% endif %}
+{% if item.primary_slave is defined %}
+PrimarySlave={{ item.primary_slave }}
+{% endif %}
+{% if item.configure_without_carrier is defined %}
+ConfigureWithoutCarrier={{ item.configure_without_carrier }}
+{% endif %}
+{% if item.ignore_carrier_loss is defined %}
+IgnoreCarrierLoss={{ item.ignore_carrier_loss }}
+{% endif %}
+{% if item.keep_configuration is defined %}
+KeepConfiguration={{ item.keep_configuration }}
+{% endif %}
+{% if item.dhcp_v4 is defined %}
+
+[DHCPv4]
+    {% if item.dhcp_v4.send_hostname is defined %}
+SendHostname={{ item.dhcp_v4.send_hostname }}
+    {% endif %}
+    {% if item.dhcp_v4.hostname is defined %}
+Hostname={{ item.dhcp_v4.hostname }}
+    {% endif %}
+    {% if item.dhcp_v4.MUDURL is defined %}
+MUDURL={{ item.dhcp_v4.MUDURL }}
+    {% endif %}
+    {% if item.dhcp_v4.client_identifier is defined %}
+ClientIdentifier={{ item.dhcp_v4.client_identifier }}
+    {% endif %}
+    {% if item.dhcp_v4.vendor_class_identifier is defined %}
+VendorClassIdentifier={{ item.dhcp_v4.vendor_class_identifier }}
+    {% endif %}
+    {% if item.dhcp_v4.user_class is defined %}
+UserClass={{ item.dhcp_v4.user_class }}
+    {% endif %}
+    {% if item.dhcp_v4.duid_type is defined %}
+DUIDType={{ item.dhcp_v4.duid_type }}
+    {% endif %}
+    {% if item.dhcp_v4.duid_raw_data is defined %}
+DUIDRawData={{ item.dhcp_v4.duid_raw_data }}
+    {% endif %}
+    {% if item.dhcp_v4.iaid is defined %}
+IAID={{ item.dhcp_v4.iaid }}
+    {% endif %}
+    {% if item.dhcp_v4.anonymize is defined %}
+Anonymize={{ item.dhcp_v4.anonymize }}
+    {% endif %}
+    {% if item.dhcp_v4.request_options is defined %}
+RequestOptions={{ item.dhcp_v4.request_options }}
+    {% endif %}
+    {% if item.dhcp_v4.send_option is defined %}
+SendOption={{ item.dhcp_v4.send_option }}
+    {% endif %}
+    {% if item.dhcp_v4.send_vendor_option is defined %}
+SendVendorOption={{ item.dhcp_v4.send_vendor_option }}
+    {% endif %}
+    {% if item.dhcp_v4.ip_service_type is defined %}
+IPServiceType={{ item.dhcp_v4.ip_service_type }}
+    {% endif %}
+    {% if item.dhcp_v4.socket_priority is defined %}
+SocketPriority={{ item.dhcp_v4.socket_priority }}
+    {% endif %}
+    {% if item.dhcp_v4.label is defined %}
+Label={{ item.dhcp_v4.label }}
+    {% endif %}
+    {% if item.dhcp_v4.use_dns is defined %}
+UseDNS={{ item.dhcp_v4.use_dns }}
+    {% endif %}
+    {% if item.dhcp_v4.routes_to_dns is defined %}
+RoutesToDNS={{ item.dhcp_v4.routes_to_dns }}
+    {% endif %}
+    {% if item.dhcp_v4.use_ntp is defined %}
+UseNTP={{ item.dhcp_v4.use_ntp }}
+    {% endif %}
+    {% if item.dhcp_v4.routes_to_ntp is defined %}
+RoutesToNTP={{ item.dhcp_v4.routes_to_ntp }}
+    {% endif %}
+    {% if item.dhcp_v4.use_sip is defined %}
+UseSIP={{ item.dhcp_v4.use_sip }}
+    {% endif %}
+    {% if item.dhcp_v4.use_captive_portal is defined %}
+UseCaptivePortal={{ item.dhcp_v4.use_captive_portal }}
+    {% endif %}
+    {% if item.dhcp_v4.use_mtu is defined %}
+UseMTU={{ item.dhcp_v4.use_mtu }}
+    {% endif %}
+    {% if item.dhcp_v4.use_hostname is defined %}
+UseHostname={{ item.dhcp_v4.use_hostname }}
+    {% endif %}
+    {% if item.dhcp_v4.use_domains is defined %}
+UseDomains={{ item.dhcp_v4.use_domains }}
+    {% endif %}
+    {% if item.dhcp_v4.use_routes is defined %}
+UseRoutes={{ item.dhcp_v4.use_routes }}
+    {% endif %}
+    {% if item.dhcp_v4.route_metric is defined %}
+RouteMetric={{ item.dhcp_v4.route_metric }}
+    {% endif %}
+    {% if item.dhcp_v4.route_table is defined %}
+RouteTable={{ item.dhcp_v4.route_table }}
+    {% endif %}
+    {% if item.dhcp_v4.route_mtu_bytes is defined %}
+RouteMTUBytes={{ item.dhcp_v4.route_mtu_bytes }}
+    {% endif %}
+    {% if item.dhcp_v4.quick_ack is defined %}
+QuickAck={{ item.dhcp_v4.quick_ack }}
+    {% endif %}
+    {% if item.dhcp_v4.use_gateway is defined %}
+UseGateway={{ item.dhcp_v4.use_gateway }}
+    {% endif %}
+    {% if item.dhcp_v4.use_timezone is defined %}
+UseTimezone={{ item.dhcp_v4.use_timezone }}
+    {% endif %}
+    {% if item.dhcp_v4.use6_rd is defined %}
+Use6RD={{ item.dhcp_v4.use6_rd }}
+    {% endif %}
+    {% if item.dhcp_v4.fallback_lease_lifetime_sec is defined %}
+FallbackLeaseLifetimeSec={{ item.dhcp_v4.fallback_lease_lifetime_sec }}
+    {% endif %}
+    {% if item.dhcp_v4.request_broadcast is defined %}
+RequestBroadcast={{ item.dhcp_v4.request_broadcast }}
+    {% endif %}
+    {% if item.dhcp_v4.max_attempts is defined %}
+MaxAttempts={{ item.dhcp_v4.max_attempts }}
+    {% endif %}
+    {% if item.dhcp_v4.listen_port is defined %}
+ListenPort={{ item.dhcp_v4.listen_port }}
+    {% endif %}
+    {% if item.dhcp_v4.deny_list is defined %}
+DenyList={{ item.dhcp_v4.deny_list }}
+    {% endif %}
+    {% if item.dhcp_v4.allow_list is defined %}
+AllowList={{ item.dhcp_v4.allow_list }}
+    {% endif %}
+    {% if item.dhcp_v4.send_release is defined %}
+SendRelease={{ item.dhcp_v4.send_release }}
+    {% endif %}
+    {% if item.dhcp_v4.send_decline is defined %}
+SendDecline={{ item.dhcp_v4.send_decline }}
+    {% endif %}
+    {% if item.dhcp_v4.net_label is defined %}
+NetLabel={{ item.dhcp_v4.net_label }}
+    {% endif %}
+{% endif %}
+{% if item.dhcp_v6 is defined %}
+
+[DHCPv6]
+    {% if item.dhcp_v6.mudurl is defined %}
+MUDURL={{ item.dhcp_v6.mudurl }}
+    {% endif %}
+    {% if item.dhcp_v6.iaid is defined %}
+IAID={{ item.dhcp_v6.iaid }}
+    {% endif %}
+    {% if item.dhcp_v6.duid_type is defined %}
+DUIDType={{ item.dhcp_v6.duid_type }}
+    {% endif %}
+    {% if item.dhcp_v6.duid_raw_data is defined %}
+DUIDRawData={{ item.dhcp_v6.duid_raw_data }}
+    {% endif %}
+    {% if item.dhcp_v6.request_options is defined %}
+RequestOptions={{ item.dhcp_v6.request_options }}
+    {% endif %}
+    {% if item.dhcp_v6.send_option is defined %}
+SendOption={{ item.dhcp_v6.send_option }}
+    {% endif %}
+    {% if item.dhcp_v6.send_vendor_option is defined %}
+SendVendorOption={{ item.dhcp_v6.send_vendor_option }}
+    {% endif %}
+    {% if item.dhcp_v6.user_class is defined %}
+UserClass={{ item.dhcp_v6.user_class }}
+    {% endif %}
+    {% if item.dhcp_v6.vendor_class is defined %}
+VendorClass={{ item.dhcp_v6.vendor_class }}
+    {% endif %}
+    {% if item.dhcp_v6.prefix_delegation_hint is defined %}
+PrefixDelegationHint={{ item.dhcp_v6.prefix_delegation_hint }}
+    {% endif %}
+    {% if item.dhcp_v6.rapid_commit is defined %}
+RapidCommit={{ item.dhcp_v6.rapid_commit }}
+    {% endif %}
+    {% if item.dhcp_v6.use_address is defined %}
+UseAddress={{ item.dhcp_v6.use_address }}
+    {% endif %}
+    {% if item.dhcp_v6.use_captive_portal is defined %}
+UseCaptivePortal={{ item.dhcp_v6.use_captive_portal }}
+    {% endif %}
+    {% if item.dhcp_v6.use_delegated_prefix is defined %}
+UseDelegatedPrefix={{ item.dhcp_v6.use_delegated_prefix }}
+    {% endif %}
+    {% if item.dhcp_v6.use_dns is defined %}
+UseDNS={{ item.dhcp_v6.use_dns }}
+    {% endif %}
+    {% if item.dhcp_v6.use_ntp is defined %}
+UseNTP={{ item.dhcp_v6.use_ntp }}
+    {% endif %}
+    {% if item.dhcp_v6.use_hostname is defined %}
+UseHostname={{ item.dhcp_v6.use_hostname }}
+    {% endif %}
+    {% if item.dhcp_v6.use_domains is defined %}
+UseDomains={{ item.dhcp_v6.use_domains }}
+    {% endif %}
+    {% if item.dhcp_v6.net_label is defined %}
+NetLabel={{ item.dhcp_v6.net_label }}
+    {% endif %}
+    {% if item.dhcp_v6.send_release is defined %}
+SendRelease={{ item.dhcp_v6.send_release }}
+    {% endif %}
+    {% if item.dhcp_v6.without_ra is defined %}
+WithoutRA={{ item.dhcp_v6.without_ra }}
+    {% endif %}
+{% endif %}
+{% if item.dhcp_server is defined %}
+[DHCPServer]
+    {% if item.dhcp_server.server_address is defined %}
+ServerAddress={{ item.dhcp_server.server_address }}
+    {% endif %}
+    {% if item.dhcp_server.pool_offset is defined %}
+PoolOffset={{ item.dhcp_server.pool_offset }}
+    {% endif %}
+    {% if item.dhcp_server.pool_size is defined %}
+PoolSize={{ item.dhcp_server.pool_size }}
+    {% endif %}
+    {% if item.dhcp_server.default_lease_time_sec is defined %}
+DefaultLeaseTimeSec={{ item.dhcp_server.default_lease_time_sec }}
+    {% endif %}
+    {% if item.dhcp_server.max_lease_time_sec is defined %}
+MaxLeaseTimeSec={{ item.dhcp_server.max_lease_time_sec }}
+    {% endif %}
+    {% if item.dhcp_server.uplink_interface is defined %}
+UplinkInterface={{ item.dhcp_server.uplink_interface }}
+    {% endif %}
+    {% if item.dhcp_server.emit_dns is defined %}
+EmitDNS={{ item.dhcp_server.emit_dns }}
+    {% endif %}
+    {% if item.dhcp_server.dns is defined %}
+DNS={{ item.dhcp_server.dns }}
+    {% endif %}
+    {% if item.dhcp_server.emit_ntp is defined %}
+EmitNTP={{ item.dhcp_server.emit_ntp }}
+    {% endif %}
+    {% if item.dhcp_server.ntp is defined %}
+NTP={{ item.dhcp_server.ntp }}
+    {% endif %}
+    {% if item.dhcp_server.emit_sip is defined %}
+EmitSIP={{ item.dhcp_server.emit_sip }}
+    {% endif %}
+    {% if item.dhcp_server.sip is defined %}
+SIP={{ item.dhcp_server.sip }}
+    {% endif %}
+    {% if item.dhcp_server.emit_pop3 is defined %}
+EmitPOP3={{ item.dhcp_server.emit_pop3 }}
+    {% endif %}
+    {% if item.dhcp_server.pop3 is defined %}
+POP3={{ item.dhcp_server.pop3 }}
+    {% endif %}
+    {% if item.dhcp_server.emit_smtp is defined %}
+EmitSMTP={{ item.dhcp_server.emit_smtp }}
+    {% endif %}
+    {% if item.dhcp_server.smtp is defined %}
+SMTP={{ item.dhcp_server.smtp }}
+    {% endif %}
+    {% if item.dhcp_server.emit_lpr is defined %}
+EmitLPR={{ item.dhcp_server.emit_lpr }}
+    {% endif %}
+    {% if item.dhcp_server.lpr is defined %}
+LPR={{ item.dhcp_server.lpr }}
+    {% endif %}
+    {% if item.dhcp_server.emit_router is defined %}
+EmitRouter={{ item.dhcp_server.emit_router }}
+    {% endif %}
+    {% if item.dhcp_server.router is defined %}
+Router={{ item.dhcp_server.router }}
+    {% endif %}
+    {% if item.dhcp_server.emit_timezone is defined %}
+EmitTimezone={{ item.dhcp_server.emit_timezone }}
+    {% endif %}
+    {% if item.dhcp_server.timezone is defined %}
+Timezone={{ item.dhcp_server.timezone }}
+    {% endif %}
+    {% if item.dhcp_server.boot_server_address is defined %}
+BootServerAddress={{ item.dhcp_server.boot_server_address }}
+    {% endif %}
+    {% if item.dhcp_server.boot_server_name is defined %}
+BootServerName={{ item.dhcp_server.boot_server_name }}
+    {% endif %}
+    {% if item.dhcp_server.boot_filename is defined %}
+BootFilename={{ item.dhcp_server.boot_filename }}
+    {% endif %}
+    {% if item.dhcp_server.send_option is defined %}
+SendOption={{ item.dhcp_server.send_option }}
+    {% endif %}
+    {% if item.dhcp_server.send_vendor_option is defined %}
+SendVendorOption={{ item.dhcp_server.send_vendor_option }}
+    {% endif %}
+    {% if item.dhcp_server.bind_to_interface is defined %}
+BindToInterface={{ item.dhcp_server.bind_to_interface }}
+    {% endif %}
+    {% if item.dhcp_server.relay_target is defined %}
+RelayTarget={{ item.dhcp_server.relay_target }}
+    {% endif %}
+    {% if item.dhcp_server.relay_agent_circuit_id is defined %}
+RelayAgentCircuitId={{ item.dhcp_server.relay_agent_circuit_id }}
+    {% endif %}
+    {% if item.dhcp_server.relay_agent_remote_id is defined %}
+RelayAgentRemoteId={{ item.dhcp_server.relay_agent_remote_id }}
+    {% endif %}
+{% endif %}
+{% if item.routes is defined %}
+    {% for route in item.routes %}
+
+[Route]
+        {% if route.gw is defined %}
+Gateway={{ route.gw }}
+        {% endif %}
+        {% if route.gateway_on_link is defined %}
+GatewayOnLink={{ route.gateway_on_link }}
+        {% endif %}
+        {% if route.dest is defined %}
+Destination={{ route.dest }}
+        {% endif %}
+        {% if route.source is defined %}
+Source={{ route.source }}
+        {% endif %}
+        {% if route.metric is defined %}
+Metric={{ route.metric }}
+        {% endif %}
+        {% if route.ip_v6_preference is defined %}
+IPv6Preference={{ route.ip_v6_preference }}
+        {% endif %}
+        {% if route.scope is defined %}
+Scope={{ route.scope }}
+        {% endif %}
+        {% if route.preferred_source is defined %}
+PreferredSource={{ route.preferred_source }}
+        {% endif %}
+        {% if route.table is defined %}
+Table={{ route.table }}
+        {% endif %}
+        {% if route.protocol is defined %}
+Protocol={{ route.protocol }}
+        {% endif %}
+        {% if route.type is defined %}
+Type={{ route.type }}
+        {% endif %}
+        {% if route.initial_congestion_window is defined %}
+InitialCongestionWindow={{ route.initial_congestion_window }}
+        {% endif %}
+        {% if route.initial_advertised_receive_window is defined %}
+InitialAdvertisedReceiveWindow={{ route.initial_advertised_receive_window }}
+        {% endif %}
+        {% if route.quick_ack is defined %}
+QuickAck={{ route.quick_ack }}
+        {% endif %}
+        {% if route.fast_open_no_cookie is defined %}
+FastOpenNoCookie={{ route.fast_open_no_cookie }}
+        {% endif %}
+        {% if route.ttl_propagate is defined %}
+TTLPropagate={{ route.ttl_propagate }}
+        {% endif %}
+        {% if route.mtu_bytes is defined %}
+MTUBytes={{ route.mtu_bytes }}
+        {% endif %}
+        {% if route.tcp_advertised_maximum_segment_size is defined %}
+TCPAdvertisedMaximumSegmentSize={{ route.tcp_advertised_maximum_segment_size }}
+        {% endif %}
+        {% if route.tcp_congestion_control_algorithm is defined %}
+TCPCongestionControlAlgorithm={{ route.tcp_congestion_control_algorithm }}
+        {% endif %}
+        {% if route.multi_path_route is defined %}
+MultiPathRoute={{ route.multi_path_route }}
+        {% endif %}
+        {% if route.next_hop is defined %}
+NextHop={{ route.next_hop }}
+        {% endif %}
+    {% endfor %}
+{% endif %}

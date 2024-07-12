@@ -1,0 +1,9 @@
+---
+networkd_keep_existing_definitions: false
+networkd_conf_dir: /etc/systemd/network
+networkd_reload_kernel_mods: true
+
+networkd_link: []
+networkd_netdev: []
+networkd_network: []
+network_drivers: []

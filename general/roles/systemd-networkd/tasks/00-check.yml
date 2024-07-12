@@ -1,0 +1,44 @@
+---
+
+- name: Assert no interface name exceeds the size limit
+  ansible.builtin.assert:
+    that: item | length < 16
+    fail_msg: "Error: Interface names must not exceed 15 bytes."
+  loop: "{{ _netdev_names + _link_names + _network_names }}"
+  vars:
+    _netdev_names: "{{ networkd_netdev | json_query('[?name].name') }}"
+    _link_names: "{{ networkd_link | json_query('[?link_name].link_name') }}"
+    _network_names: "{{ networkd_network | json_query('[?name].name') }}"
+
+- name: Assert all IP addresses are valid have a netmask specified
+  ansible.builtin.assert:
+    that: (item | ansible.utils.ipaddr) and (item | regex_search('/[0-9]{1,3}'))
+    fail_msg: "Error: Address {{ item }} is invalid and/or has no cidr."
+  loop: "{{ networkd_network | json_query('[].address') | flatten }}"
+  when: networkd_network is defined
+
+- name: Assert there is only one or less IPv4 gateway
+  ansible.builtin.assert:
+    that: networkd_network | json_query('[?gateway].gateway') | length < 2
+    fail_msg: "Error: There is more than one IPv4 gateway."
+  when: networkd_network | json_query('[?gateway].gateway') is defined
+
+- name: Assert there is only one or less IPv6 gateway
+  ansible.builtin.assert:
+    that: networkd_network | json_query('[?gateway6].gateway6') | length < 2
+    fail_msg: "Error: There is more than one IPv6 gateway."
+  when: networkd_network | json_query('[?gateway6].gateway6') is defined
+
+- name: Assert the IPv4 gateway is within the range of the subnets
+  ansible.builtin.assert:
+    that: networkd_network | json_query('[?gateway].gateway') | ansible.utils.ipaddr(item)
+    fail_msg: "Error: The gateway {{ networkd_network | json_query('[?gateway].gateway') }} is not in range of {{ item }}"
+  loop: "{{ networkd_network | json_query('[?gateway].address') | flatten | ansible.utils.ipv4 }}"
+  when: networkd_network | json_query('[?gateway].gateway') is defined
+
+- name: Assert the IPv6 gateway is within the range of the subnets
+  ansible.builtin.assert:
+    that: networkd_network | json_query('[?gateway6].gateway6') | ansible.utils.ipaddr(item)
+    fail_msg: "Error: The gateway {{ networkd_network | json_query('[?gateway6].gateway6') }} is not in range of {{ item }}"
+  loop: "{{ networkd_network | json_query('[?gateway6].address') | flatten | ansible.utils.ipv6 }}"
+  when: networkd_network | json_query('[?gateway6].gateway6') is defined

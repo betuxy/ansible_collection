@@ -1,0 +1,153 @@
+#jinja2:lstrip_blocks: True
+[Match]
+MACAddress={{ item.mac_address }}
+{% if item.type is defined %}
+Type={{ item.type }}
+{% endif %}
+{% if item.kind is defined %}
+Kind={{ item.kind }}
+{% endif %}
+
+[Link]
+{% if item.link_description is defined %}
+Description={{ item.link_description }}
+{% endif %}
+{% if item.link_alias is defined %}
+Alias={{ item.link_alias }}
+{% endif %}
+{% if item.link_mac_address_policy is defined %}
+MACAddressPolicy={{ item.link_mac_address_policy }}
+{% endif %}
+{% if item.link_mac_address is defined %}
+MACAddress={{ item.link_mac_address }}
+{% endif %}
+{% if item.link_name_policy is defined %}
+NamePolicy={{ item.link_name_policy }}
+{% endif %}
+Name={{ item.link_name }}
+{% if item.link_alternative_names_policy is defined %}
+AlternativeNamesPolicy={{ item.link_alternative_names_policy }}
+{% endif %}
+{% if item.link_alternative_name is defined %}
+AlternativeName={{ item.link_alternative_name }}
+{% endif %}
+{% if item.link_transmit_queues is defined %}
+TransmitQueues={{ item.link_transmit_queues }}
+{% endif %}
+{% if item.link_receive_queues is defined %}
+ReceiveQueues={{ item.link_receive_queues }}
+{% endif %}
+{% if item.link_transmit_queue_length is defined %}
+TransmitQueueLength={{ item.link_transmit_queue_length }}
+{% endif %}
+{% if item.link_mtu_bytes is defined %}
+MTUBytes={{ item.link_mtu_bytes }}
+{% endif %}
+{% if item.link_bits_per_second is defined %}
+BitsPerSecond={{ item.link_bits_per_second }}
+{% endif %}
+{% if item.link_duplex is defined %}
+Duplex={{ item.link_duplex }}
+{% endif %}
+{% if item.link_auto_negotiation is defined %}
+AutoNegotiation={{ item.link_auto_negotiation }}
+{% endif %}
+{% if item.link_wake_on_lan is defined %}
+WakeOnLan={{ item.link_wake_on_lan }}
+{% endif %}
+{% if item.link_wake_on_lan_password is defined %}
+WakeOnLanPassword={{ item.link_wake_on_lan_password }}
+{% endif %}
+{% if item.link_port is defined %}
+Port={{ item.link_port }}
+{% endif %}
+{% if item.link_advertise is defined %}
+Advertise={{ item.link_advertise }}
+{% endif %}
+{% if item.link_receive_checksum_offload is defined %}
+ReceiveChecksumOffload={{ item.link_receive_checksum_offload }}
+{% endif %}
+{% if item.link_transmit_checksum_offload is defined %}
+TransmitChecksumOffload={{ item.link_transmit_checksum_offload }}
+{% endif %}
+{% if item.link_tcp_segmentation_offload is defined %}
+TCPSegmentationOffload={{ item.link_tcp_segmentation_offload }}
+{% endif %}
+{% if item.link_segmentation_offload is defined %}
+SegmentationOffload={{ item.link_segmentation_offload }}
+{% endif %}
+{% if item.link_generic_segmentation_offload is defined %}
+GenericSegmentationOffload={{ item.link_generic_segmentation_offload }}
+{% endif %}
+{% if item.link_generic_receive_offload is defined %}
+GenericReceiveOffload={{ item.link_generic_receive_offload }}
+{% endif %}
+{% if item.link_generic_receive_offload_hardware is defined %}
+GenericReceiveOffloadHardware={{ item.link_generic_receive_offload_hardware }}
+{% endif %}
+{% if item.link_large_receive_offload is defined %}
+LargeReceiveOffload={{ item.link_large_receive_offload }}
+{% endif %}
+{% if item.link_receive_vlanctag_hardware_acceleration is defined %}
+ReceiveVLANCTAGHardwareAcceleration={{ item.link_receive_vlanctag_hardware_acceleration }}
+{% endif %}
+{% if item.link_transmit_vlanctag_hardware_acceleration is defined %}
+TransmitVLANCTAGHardwareAcceleration={{ item.link_transmit_vlanctag_hardware_acceleration }}
+{% endif %}
+{% if item.link_receive_vlanctag_filter is defined %}
+ReceiveVLANCTAGFilter={{ item.link_receive_vlanctag_filter }}
+{% endif %}
+{% if item.link_transmit_vlanstag_hardware_acceleration is defined %}
+TransmitVLANSTAGHardwareAcceleration={{ item.link_transmit_vlanstag_hardware_acceleration }}
+{% endif %}
+{% if item.link_n_tuple_filter is defined %}
+NTupleFilter={{ item.link_n_tuple_filter }}
+{% endif %}
+{% if item.link_rx_channels is defined %}
+RxChannels={{ item.link_rx_channels }}
+{% endif %}
+{% if item.link_rx_buffer_size is defined %}
+RxBufferSize={{ item.link_rx_buffer_size }}
+{% endif %}
+{% if item.link_rx_flow_control is defined %}
+RxFlowControl={{ item.link_rx_flow_control }}
+{% endif %}
+{% if item.link_tx_flow_control is defined %}
+TxFlowControl={{ item.link_tx_flow_control }}
+{% endif %}
+{% if item.link_auto_negotiation_flow_control is defined %}
+AutoNegotiationFlowControl={{ item.link_auto_negotiation_flow_control }}
+{% endif %}
+{% if item.link_generic_segment_offload_max_bytes is defined %}
+GenericSegmentOffloadMaxBytes={{ item.link_generic_segment_offload_max_bytes }}
+{% endif %}
+{% if item.link_generic_segment_offload_max_segments is defined %}
+GenericSegmentOffloadMaxSegments={{ item.link_generic_segment_offload_max_segments }}
+{% endif %}
+{% if item.link_use_adaptive_rx_coalesce is defined %}
+UseAdaptiveRxCoalesce={{ item.link_use_adaptive_rx_coalesce }}
+{% endif %}
+{% if item.link_rx_coalesce_sec is defined %}
+RxCoalesceSec={{ item.link_rx_coalesce_sec }}
+{% endif %}
+{% if item.link_rx_max_coalesced_frames is defined %}
+RxMaxCoalescedFrames={{ item.link_rx_max_coalesced_frames }}
+{% endif %}
+{% if item.link_coalesce_packet_rate_low is defined %}
+CoalescePacketRateLow={{ item.link_coalesce_packet_rate_low }}
+{% endif %}
+{% if item.link_coalesce_packet_rate_sample_interval_sec is defined %}
+CoalescePacketRateSampleIntervalSec={{ item.link_coalesce_packet_rate_sample_interval_sec }}
+{% endif %}
+{% if item.link_statistics_block_coalesce_sec is defined %}
+StatisticsBlockCoalesceSec={{ item.link_statistics_block_coalesce_sec }}
+{% endif %}
+{% if item.link_mdi is defined %}
+MDI={{ item.link_mdi }}
+{% endif %}
+{% if item.link_iov_virtual_functions is defined %}
+IOVVirtualFunctions={{ item.link_iov_virtual_functions }}
+{% endif %}
+{% if item.link_virtual_function is defined %}
+VirtualFunction={{ item.link_virtual_function }}
+{% endif %}

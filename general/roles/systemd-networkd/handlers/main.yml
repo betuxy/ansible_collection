@@ -1,0 +1,11 @@
+---
+# handlers file for systemd_networkd
+- name: Restart systemd-networkd
+  ansible.builtin.service:
+    name: systemd-networkd
+    state: restarted
+
+- name: Reload systemd-networkd
+  ansible.builtin.service:
+    name: systemd-networkd
+    state: reloaded

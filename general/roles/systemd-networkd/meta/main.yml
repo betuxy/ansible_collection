@@ -1,0 +1,10 @@
+---
+galaxy_info:
+  author: betuxy
+  description: Configure network with systemd-networkd
+
+  license: GPL-2.0-or-later
+
+  min_ansible_version: "5"
+
+dependencies: []

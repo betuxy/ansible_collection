@@ -1,0 +1,72 @@
+---
+- name: Gather minimal facts
+  ansible.builtin.setup:
+    gather_subset: "!all"
+  when: ansible_facts['os_family'] is not defined
+
+- name: Get package facts
+  ansible.builtin.package_facts:
+  when: ansible_facts['packages'] is not defined
+
+- name: Uninstall other network solutions
+  ansible.builtin.package:
+    name:
+      - NetworkManager
+      - cloud-init
+    state: absent
+  when: ansible_facts['packages']['NetworkManager'] is defined or
+        ansible_facts['packages']['cloud-init'] is defined
+
+- name: Install systemd_networkd
+  ansible.builtin.package:
+    name: systemd-networkd
+    state: present
+  when:
+    - ansible_facts['packages']['systemd-networkd'] is not defined
+
+- name: Install systemd_resolved
+  ansible.builtin.package:
+    name: systemd-resolved
+    state: present
+  when:
+    - ansible_facts['packages']['systemd-resolved'] is not defined
+    - ansible_facts['distribution_major_version'] != "8"
+
+- name: Ensure systemd-networkd config directory exist
+  ansible.builtin.file:
+    path: "{{ networkd_conf_dir }}"
+    state: directory
+    mode: "0755"
+  when: ansible_facts['distribution_major_version'] == "8"
+
+- name: Enable systemd_networkd and systemd_resolved
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - systemd-networkd.service
+    - systemd-resolved.service
+
+- name: Manage resolv.conf
+  block:
+    - name: Check if resolv.conf is stub
+      ansible.builtin.stat:
+        path: /etc/resolv.conf
+      register: _resolv_conf
+
+    - name: Remove existing resolv.conf
+      ansible.builtin.file:
+        path: /etc/resolv.conf
+        state: absent
+      register: _file_deleted
+      when: (_resolv_conf.stat.exists and _resolv_conf.stat.lnk_target is not defined) or
+            (_resolv_conf.stat.exists and _resolv_conf.stat.lnk_target is defined and
+              _resolv_conf.stat.lnk_target != "/run/systemd/resolve/stub-resolv.conf")
+
+    - name: Link stub resolver
+      ansible.builtin.file:
+        path: /etc/resolv.conf
+        src: /run/systemd/resolve/stub-resolv.conf
+        state: link
+      when: _file_deleted.changed or _resolv_conf.stat.exists is false
