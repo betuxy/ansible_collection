@@ -1,0 +1,58 @@
+{% if apache_directory is defined %}
+    {% for directory in apache_directory %}
+<Directory "{{ directory.path }}">
+        {% if directory.alias is defined and directory.alias is iterable and directory.alias is not string %}
+            {% for alias in directory.alias %}
+    Alias {{ alias }}
+            {% endfor %}
+        {% elif directory.alias is defined %}
+    Alias {{ directory.alias }}
+        {% endif %}
+        {% if directory.allow_override is defined %}
+    AllowOverride {{ directory.allow_override }}
+        {% endif %}
+        {% if directory.handler is defined and directory.handler is iterable and directory.handler is not string %}
+            {% for handler in directory.handler %}
+    SetHandler {{ handler }}
+            {% endfor %}
+        {% elif directory.handler is defined %}
+    SetHandler {{ directory.handler }}
+        {% endif %}
+        {% if directory.dav is defined %}
+    Dav {{ directory.dav }}
+        {% endif %}
+        {% if directory.force_type is defined %}
+    ForceType {{ directory.force_type }}
+        {% endif %}
+        {% if directory.options is defined %}
+    Options {{ directory.options }}
+        {% endif %}
+        {% if directory.require is defined and directory.require is iterable and directory.require is not string %}
+            {% for req in directory.require %}
+    Require {{ req }}
+            {% endfor %}
+        {% elif directory.require is defined %}
+    Require {{ directory.require }}
+        {% endif %}
+        {% if directory.directory_index is defined %}
+    DirectoryIndex {{ directory.directory_index }}
+        {% endif %}
+        {% if directory.limit_except is defined %}
+            {% for limit in directory.limit_except %}
+    <LimitExcept {{ limit.methods }}>
+                {% if limit.allow is defined %}
+        Allow {{ limit.allow }}
+                {% endif %}
+    </LimitExcept>
+
+           {% endfor %}
+        {% endif %}
+        {% if directory.ssl_options is defined and directory.ssl_options is iterable and directory.ssl_options is not string %}
+    SSLOptions{% for option in directory.ssl_options %} {{ option }}{% endfor %}
+        {% elif directory.ssl_options is defined %}
+    SSLOptions {{ directory.ssl_options }}
+        {% endif %}
+</Directory>
+
+    {% endfor %}
+{% endif %}

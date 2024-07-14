@@ -1,0 +1,51 @@
+{% if apache_location is defined %}
+    {% for location in apache_location %}
+<Location {{ location.path }}>
+        {% if location.allow_methods is defined %}
+    AllowMethods {{ location.allow_methods }}
+        {% endif %}
+        {% if location.add_handler is defined %}
+    AddHandler {{ location.add_handler }}
+        {% endif %}
+        {% if location.alias is defined and location.alias is iterable and location.alias is not string %}
+            {% for alias in location.alias %}
+    Alias {{ alias }}
+            {% endfor %}
+        {% elif location.alias is defined %}
+    Alias {{ location.alias }}
+        {% endif %}
+        {% if location.fcgid_wrapper is defined %}
+    FcgidWrapper {{ location.fcgid_wrapper }}
+        {% endif %}
+        {% if location.proxy_pass is defined %}
+    ProxyPass {{ location.proxy_pass }}
+        {% endif %}
+        {% if location.handler is defined %}
+    SetHandler {{ location.handler }}
+        {% endif %}
+        {% if location.options is defined and location.options is iterable and location.options is not string %}
+    Options{% for option in location.options %} {{ option }}{% endfor %}
+        {% elif location.options is defined %}
+    Options {{ location.options }}
+        {% endif %}
+        {% if location.redirect is defined and location.redirect is iterable and location.redirect is not string %}
+            {% for redirect in location.redirect %}
+    Redirect {{ redirect }}
+            {% endfor %}
+        {% elif location.redirect is defined %}
+    Redirect {{ location.redirect }}
+        {% endif %}
+        {% if location.require is defined and location.require is iterable and location.require is not string %}
+            {% for req in location.require %}
+    Require {{ req }}
+            {% endfor %}
+        {% elif location.require is defined %}
+    Require {{ location.require }}
+        {% endif %}
+        {% if location.ssl_reneg_buffer_size is defined %}
+    SSLRenegBufferSize {{ location.ssl_reneg_buffer_size }}
+	{% endif %}
+</Location>
+
+    {% endfor %}
+{% endif %}

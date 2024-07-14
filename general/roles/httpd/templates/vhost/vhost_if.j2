@@ -1,0 +1,10 @@
+{% if vhost.if is defined %}
+    {% for i in vhost.if %}
+    <If "{{ i.pattern }}">
+        {% if i.redirect is defined %}
+        Redirect {{ i.redirect }}
+        {% endif %}
+    </If>
+
+    {% endfor %}
+{% endif %}

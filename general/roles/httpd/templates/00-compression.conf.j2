@@ -1,0 +1,7 @@
+<IfModule mod_deflate.c>
+{% if apache_custom_deflate_config.deflate is defined %}
+{% for type in apache_custom_deflate_config.deflate %}
+AddOutputFilterByType DEFLATE {{ type }}
+{% endfor %}
+{% endif %}
+</IfModule>

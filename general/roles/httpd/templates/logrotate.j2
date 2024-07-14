@@ -1,0 +1,51 @@
+# {{ ansible_managed }}
+
+/var/log/httpd/*/*log
+/var/log/httpd/*log
+{
+    daily
+
+    rotate 7
+    maxage 7
+
+    missingok
+#    notifempty         # not compatible with maxage
+
+    dateext
+    delaycompress
+
+    sharedscripts
+
+    prerotate
+        /bin/sleep 10
+    endscript
+
+    postrotate
+       /bin/systemctl reload httpd.service > /dev/null 2>&1 || true
+    endscript
+}
+
+/var/log/httpd24/*/*log
+/var/log/httpd24/*log
+{
+    daily
+
+    rotate 7
+    maxage 7
+
+    missingok
+#    notifempty         # not compatible with maxage
+
+    dateext
+    delaycompress
+
+    sharedscripts
+
+    prerotate
+        /bin/sleep 10
+    endscript
+
+    postrotate
+        /sbin/service httpd24-httpd reload > /dev/null 2>&1 || true
+    endscript
+}

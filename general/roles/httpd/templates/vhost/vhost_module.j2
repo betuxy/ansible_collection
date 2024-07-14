@@ -1,0 +1,24 @@
+{% if vhost.module is defined %}
+    {% for module in vhost.module %}
+    <IfModule {{ module.name }}>
+        {% if module.header is defined and module.header is iterable and module.header is not string %}
+            {% for header in module.header %}
+        Header {{ header }}
+            {% endfor %}
+        {% elif module.header is defined %}
+        Header {{ module.header }}
+        {% endif %}
+        {% if module.setenvif is defined and module.setenvif is iterable and module.setenvif is not string %}
+            {% for setenvif in module.setenvif %}
+        SetEnvIf {{ setenvif }}
+            {% endfor %}
+        {% elif module.setenvif is defined %}
+        SetEnvIf {{ module.setenvif }}
+        {% endif %}
+        {% if module.fcgid_wrapper is defined %}
+        FcgidWrapper {{ module.fcgid_wrapper }}
+        {% endif %}
+    </IfModule>
+
+    {% endfor %}
+{% endif %}

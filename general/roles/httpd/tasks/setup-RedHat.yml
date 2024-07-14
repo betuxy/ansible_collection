@@ -1,0 +1,10 @@
+---
+- name: Gathering package facts
+  ansible.builtin.package_facts:
+  when: ansible_facts.packages is not defined
+
+- name: Ensure Apache is installed
+  ansible.builtin.yum:
+    name: "{{ apache_packages }}"
+    state: "{{ apache_packages_state }}"
+    enablerepo: "{{ apache_enable_repo }}"

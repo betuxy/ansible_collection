@@ -1,0 +1,14 @@
+{% if vhost.rewrite is defined %}
+  RewriteEngine on
+    {% for rule in vhost.rewrite %}
+    {% if rule.cond is defined and rule.cond is iterable and rule.cond is not string %}
+      {% for cond in rule.cond %}
+        RewriteCond {{ cond }}
+      {% endfor %}
+        RewriteRule {{ rule.rule }}
+    {% else %}
+      RewriteCond {{ rule.cond }}
+      RewriteRule {{ rule.rule }}
+    {% endif %}
+    {% endfor %}
+{% endif %}

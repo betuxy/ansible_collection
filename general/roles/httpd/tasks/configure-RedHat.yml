@@ -1,0 +1,125 @@
+---
+- name: Check whether certificates defined in vhosts exist.
+  ansible.builtin.stat:
+    path: "{{ item['ssl']['cert_file'] }}"
+  register: apache_ssl_certificates
+  with_items: "{{ apache_vhosts | json_query('[?ssl]') }}"
+  failed_when: apache_ssl_certificates['stat']['exists'] == false
+  when: apache_vhosts is defined
+
+- name: Set /etc/sysconfig/httpd
+  ansible.builtin.template:
+    dest: /etc/sysconfig/httpd
+    src: syscfg_httpd.j2
+    mode: '0644'
+
+- name: Enable gzip compression
+  ansible.builtin.copy:
+    dest: "{{ apache_vhost_conf_path }}/{{ apache_deflate_config_file }}"
+    src: "{{ apache_deflate_config_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  when: apache_deflate_config
+
+- name: Enable custom gzip compression
+  ansible.builtin.template:
+    dest: "{{ apache_vhost_conf_path }}/{{ apache_deflate_config_file }}"
+    src: 00-compression.conf.j2
+    owner: root
+    group: root
+    mode: '0644'
+  when: apache_custom_deflate_config is defined
+
+- name: Generate httpd.conf
+  ansible.builtin.template:
+    dest: "{{ apache_server_conf_path }}"
+    src: httpd.conf.j2
+    mode: '0644'
+
+- name: Check if the base autoindex.conf is deployed
+  ansible.builtin.shell:
+    cmd: rpm -Vf --nomtime --nogroup --nouser --nomode --nocaps {{ apache_vhost_conf_path }}autoindex.conf | grep {{ apache_vhost_conf_path }}autoindex\.conf | wc -l
+  register: apache_autoindex_finfo
+  check_mode: no
+  changed_when: false
+
+- name: Deploy managed autoindex.conf
+  ansible.builtin.template:
+    dest: "{{ apache_vhost_conf_path }}/autoindex.conf"
+    src: managed_autoindex.conf.j2
+    mode: "0644"
+  notify: reload apache
+  when: not (apache_use_autoindex_conf and apache_icons_alias and apache_use_autoindex_module and (apache_autoindex_finfo.stdout == "0"))
+
+- name: Remove listen directive from ssl.conf
+  ansible.builtin.lineinfile:
+    path: /etc/httpd/conf.d/ssl.conf
+    regexp: '^Listen [0-9]+'
+    state: absent
+
+- name: Generate conf.modules.d files
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "/etc/httpd/conf.modules.d/{{ item | basename | splitext | first }}"
+    mode: '0644'
+  loop: "{{ query('fileglob', 'templates/conf.modules.d/*') }}"
+
+- name: Generate apache vhost configuration files
+  ansible.builtin.template:
+    dest: "{{ apache_vhost_conf_path }}{{ apache_vhosts_filename }}"
+    src: "{{ apache_vhosts_template }}"
+    mode: '0644'
+  notify:
+    - check apache config
+    - reload apache
+  when: apache_vhosts is defined
+
+- name: Create apache vhosts folders
+  ansible.builtin.file:
+    path: "{{ item.document_root | default('/var/www/vhosts/' ~ item.servername ~ '/htdocs') | dirname }}"
+    state: directory
+    owner: "{{ item.parent_owner | default(item.owner | default('apache')) }}"
+    group: "{{ item.parent_group | default(item.group | default('apache')) }}"
+    mode: "{{ item.parent_mode | default(item.mode | default('2775')) }}"
+  with_items:
+    - "{{ apache_vhosts }}"
+  notify: reload apache
+  when: apache_vhosts is defined
+
+- name: Create apache vhosts documentroots
+  ansible.builtin.file:
+    path: "{{ item.document_root | default('/var/www/vhosts/' ~ item.servername ~ '/htdocs') }}"
+    state: directory
+    owner: "{{ item.owner | default('apache') }}"
+    group: "{{ item.group | default('apache') }}"
+    mode: "{{ item.mode | default('2775') }}"
+  with_items:
+    - "{{ apache_vhosts }}"
+  notify: reload apache
+  when: apache_vhosts is defined
+
+- name: Copy over .htpasswd files
+  ansible.builtin.copy:
+    src: "{{ item.1.local_file }}"
+    dest: "{{ item.1.auth_user_file }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  loop: "{{ apache_vhosts | subelements('directory', skip_missing=True) }}"
+  when: item.1.local_file is defined
+
+- name: Create log directories
+  block:
+    - name: Gather all directories from log paths
+      ansible.builtin.set_fact:
+        _log_directories: "{{ _log_directories | d([]) + [item | dirname] }}"
+      loop: "{{ apache_vhosts | json_query(log_paths) | flatten }}"
+      vars:
+        log_paths: '[?custom_log_path || error_log_path].[custom_log_path, error_log_path]'
+
+    - name: Create log directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: "0755"
+      loop: "{{ _log_directories | unique }}"

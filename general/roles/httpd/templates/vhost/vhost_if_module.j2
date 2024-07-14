@@ -1,0 +1,44 @@
+{% if vhost.if_module is defined %}
+    {% for module in vhost.if_module %}
+    <IfModule {{ module.name }}>
+        {% if module.header is defined and module.header is iterable and module.header is not string %}
+            {% for header in module.header %}
+        Header {{ header }}
+            {% endfor %}
+        {% elif module.header is defined %}
+        Header {{ module.header }}
+        {% endif %}
+        {% if module.proxy_requests is defined %}
+        ProxyRequests {{ module.proxy_requests }}
+        {% endif %}
+        {% if module.proxy_via is defined %}
+        ProxyVia {{ module.proxy_via }}
+        {% endif %}
+        {% if module.nested is defined %}
+          {% for module in module.nested %}
+            {% include 'vhost/vhost_if_submodule.j2' %}
+          {% endfor %}
+        {% endif %}
+        {% if module.proxy_pass is defined and module.proxy_pass is iterable and module.proxy_pass is not string %}
+            {% for ppass in module.proxy_pass %}
+            ProxyPass {{ ppass }}
+            {% endfor %}
+
+        {% elif module.proxy_pass is defined %}
+            ProxyPass {{ module.proxy_pass }}
+        
+        {% endif %}
+        {% if module.proxy_pass_reverse is defined and module.proxy_pass_reverse is iterable and module.proxy_pass_reverse is not string %}
+            {% for ppass in module.proxy_pass_reverse %}
+            ProxyPassReverse {{ ppass }}
+            {% endfor %}
+
+        {% elif module.proxy_pass_reverse is defined %}
+            ProxyPassReverse {{ module.proxy_pass_reverse }}
+        
+        {% endif %}
+    </IfModule>
+
+    {% endfor %}
+{% endif %}
+ 

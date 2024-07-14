@@ -1,0 +1,10 @@
+# Ansible managed
+<IfModule mpm_worker_module>
+   LoadModule cgid_module modules/mod_cgid.so
+</IfModule>
+<IfModule mpm_event_module>
+   LoadModule cgid_module modules/mod_cgid.so
+</IfModule>
+<IfModule mpm_prefork_module>
+   LoadModule cgi_module modules/mod_cgi.so
+</IfModule>

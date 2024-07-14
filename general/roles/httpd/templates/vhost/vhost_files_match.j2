@@ -1,0 +1,36 @@
+{% if vhost.files_match is defined %}
+    {% for match in vhost.files_match %}
+    <FilesMatch "{{ match.pattern }}">
+        {% if match.handler is defined %}
+        SetHandler "{{ match.handler }}:{{ match.fpm_port }}"
+        {% endif %}
+        {% if match.set_env_if is defined %}
+        SetEnvIf {{ match.set_env_if }}
+        {% endif %}
+        {% if match.options is defined and match.options is iterable and match.options is not string %}
+        Options{% for option in match.options %} {{ option }}{% endfor %}
+        {% elif match.options is defined %}
+        Options {{ match.options }}
+        {% endif %}
+        {% if match.header is defined and match.header is iterable and match.header is not string %}
+            {% for header in match.header %}
+        Header {{ header }}
+            {% endfor %}
+        {% elif match.header is defined %}
+        Header {{ match.header }}
+        {% endif %}
+        {% if match.ssl_options is defined and match.ssl_options is iterable and match.ssl_options is not string %}
+        SSLOptions{% for option in match.ssl_options %} {{ option }}{% endfor %}
+        {% elif match.ssl_options is defined %}
+        SSLOptions {{ match.ssl_options }}
+        {% endif %}
+    </FilesMatch>
+
+    {% endfor %}
+{% endif %}
+{% if vhost.phpfpmaddressport is defined %}
+    <FilesMatch "\.php$">
+        SetHandler "proxy:fcgi://{{ vhost.phpfpmaddressport }}"
+    </FilesMatch>
+
+{% endif %}

@@ -1,0 +1,10 @@
+---
+galaxy_info:
+  author: Betuxy <betux@disroot.org>
+  description: Role to configure httpd web server
+
+  license: GPL-2.0-or-later
+
+  min_ansible_version: "5"
+
+dependencies: []

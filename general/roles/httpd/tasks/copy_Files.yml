@@ -1,0 +1,63 @@
+---
+- name: Creating the cert_file directory
+  ansible.builtin.file:
+    path: "{{ item['ssl']['cert_file'] | dirname }}"
+    state: directory
+    owner: "{{ item['ssl']['owner'] | default('root') }}"
+    group: "{{ item['ssl']['group'] | default('root') }}"
+    mode: "0755"
+  with_items: "{{ apache_vhosts | json_query('[?ssl]') }}"
+  when: item['ssl']['cert_file'] is defined and item['ssl']['crt_local'] | default('false') | bool
+
+- name: Copying the cert_file
+  ansible.builtin.copy:
+    src: "{{ item['ssl']['src_path'] | default('files/certs') }}/{{ item['ssl']['cert_file'] | basename }}"
+    dest: "{{ item['ssl']['cert_file'] }}"
+    owner: "{{ item['ssl']['owner'] | default('apache') }}"
+    group: "{{ item['ssl']['group'] | default('root') }}"
+    mode: '0644'
+  with_items: "{{ apache_vhosts | json_query('[?ssl]') }}"
+  notify: reload apache
+  when: item['ssl']['cert_file'] is defined and item['ssl']['crt_local'] | default('false') | bool
+
+- name: Creating the cert_key directory
+  ansible.builtin.file:
+    path: "{{ item['ssl']['cert_key'] | dirname }}"
+    state: directory
+    owner: "{{ item['ssl']['owner'] | default('root') }}"
+    group: "{{ item['ssl']['group'] | default('root') }}"
+    mode: "0755"
+  with_items: "{{ apache_vhosts | json_query('[?ssl]') }}"
+  when: item['ssl']['cert_key'] is defined and item['ssl']['crt_local'] | default('false') | bool
+
+- name: Copying the cert_key
+  ansible.builtin.copy:
+    src: "{{ item['ssl']['src_path'] | default('files/certs') }}/{{ item['ssl']['cert_key'] | basename }}"
+    dest: "{{ item['ssl']['cert_key'] }}"
+    owner: "{{ item['ssl']['owner'] | default('apache') }}"
+    group: "{{ item['ssl']['group'] | default('root') }}"
+    mode: '0600'
+  with_items: "{{ apache_vhosts | json_query('[?ssl]') }}"
+  notify: reload apache
+  when: item['ssl']['cert_key'] is defined and item['ssl']['crt_local'] | default('false') | bool
+
+- name: Creating the cert_chain directory
+  ansible.builtin.file:
+    path: "{{ item['ssl']['cert_chain'] | dirname }}"
+    state: directory
+    owner: "{{ item['ssl']['owner'] | default('root') }}"
+    group: "{{ item['ssl']['group'] | default('root') }}"
+    mode: "0755"
+  with_items: "{{ apache_vhosts | json_query('[?ssl]') }}"
+  when: item['ssl']['cert_chain'] is defined and item['ssl']['crt_local'] | default('false') | bool
+
+- name: Copying the cert_chain
+  ansible.builtin.copy:
+    src: "{{ item['ssl']['src_path'] | default('files/certs') }}/{{ item['ssl']['cert_chain'] | basename }}"
+    dest: "{{ item['ssl']['cert_chain'] }}"
+    owner: "{{ item['ssl']['owner'] | default('apache') }}"
+    group: "{{ item['ssl']['group'] | default('root') }}"
+    mode: '0644'
+  with_items: "{{ apache_vhosts | json_query('[?ssl]') }}"
+  notify: reload apache
+  when: item['ssl']['cert_chain'] is defined and item['ssl']['crt_local'] | default('false') | bool

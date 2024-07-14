@@ -1,0 +1,79 @@
+{% if vhost.directory is defined %}
+    {% for directory in vhost.directory %}
+    <Directory "{{ directory.path | default(vhost.document_root) | default("/var/www/vhosts/" ~ vhost.servername ~ "/htdocs") }}">
+        {% if directory.alias is defined and directory.alias is iterable and directory.alias is not string %}
+            {% for alias in directory.alias %}
+        Alias {{ alias }}
+            {% endfor %}
+        {% elif directory.alias is defined %}
+        Alias {{ directory.alias }}
+        {% endif %}
+        {% if directory.allow_override is defined %}
+        AllowOverride {{ directory.allow_override }}
+        {% endif %}
+        {% if directory.handler is defined and directory.handler is iterable and directory.handler is not string %}
+            {% for handler in directory.handler %}
+        SetHandler {{ handler }}
+            {% endfor %}
+        {% elif directory.handler is defined %}
+        SetHandler {{ directory.handler }}
+        {% endif %}
+	{% if directory.order is defined %}
+	Order {{ directory.order }}
+	{% endif %}
+	{% if directory.allow is defined %}
+	Allow {{ directory.allow }}
+	{% endif %}
+        {% if directory.dav is defined %}
+        Dav {{ directory.dav }}
+        {% endif %}
+        {% if directory.force_type is defined %}
+        ForceType {{ directory.force_type }}
+        {% endif %}
+        {% if directory.options is defined %}
+        Options {{ directory.options }}
+        {% endif %}
+        {% if directory.allow_methods is defined %}
+        AllowMethods {{ directory.allow_methods }}
+        {% endif %}
+        {% if directory.require is defined and directory.require is iterable and directory.require is not string %}
+            {% for req in directory.require %}
+        Require {{ req }}
+            {% endfor %}
+        {% elif directory.require is defined %}
+        Require {{ directory.require }}
+        {% endif %}
+        {% if directory.directory_index is defined %}
+        DirectoryIndex {{ directory.directory_index }}
+        {% endif %}
+        {% if directory.limit_except is defined %}
+            {% for limit in directory.limit_except %}
+            <LimitExcept {{ limit.methods }}>
+                {% if limit.allow is defined %}
+                Allow {{ limit.allow }}
+                {% endif %}
+            </LimitExcept>
+
+           {% endfor %}
+        {% endif %}
+        {% if directory.ssl_options is defined and directory.ssl_options is iterable and directory.ssl_options is not string %}
+        SSLOptions{% for option in directory.ssl_options %} {{ option }}{% endfor %}
+        {% elif directory.ssl_options is defined %}
+        SSLOptions {{ directory.ssl_options }}
+        {% endif %}
+        {% if directory.auth_type is defined %}
+        AuthType {{ directory.auth_type }}
+        {% endif %}
+        {% if directory.auth_name is defined %}
+        AuthName "{{ directory.auth_name }}"
+        {% endif %}
+        {% if directory.auth_basic_provider is defined %}
+        AuthBasicProvider {{ directory.auth_basic_provider }}
+        {% endif %}
+        {% if directory.auth_user_file is defined %}
+        AuthUserFile "{{ directory.auth_user_file }}"
+        {% endif %}
+    </Directory>
+
+    {% endfor %}
+{% endif %}

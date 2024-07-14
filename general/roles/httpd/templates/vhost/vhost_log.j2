@@ -1,0 +1,17 @@
+{% if vhost.log_level is defined %}
+    LogLevel {{ vhost.log_level }}
+{% endif %}
+{% if vhost.log_format is defined %}
+    LogFormat {{ vhost.log_format }}
+
+{% endif %}
+{% if vhost.custom_log_path is defined %}
+    CustomLog {{ vhost.custom_log_path }} {{ vhost.custom_log_format | default('ansible_custom') }}
+{% else %}
+    CustomLog logs/{{ vhost.servername }}-access.log {{ vhost.custom_log_format | default('ansible_custom') }}
+{% endif %}
+{% if vhost.error_log_path is defined %}
+    ErrorLog {{ vhost.error_log_path }}
+{% else %}
+    ErrorLog logs/{{ vhost.servername }}-error.log
+{% endif %}

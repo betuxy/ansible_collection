@@ -1,0 +1,8 @@
+# Ansible managed
+{% if apache_mod is defined and apache_mod is iterable and apache_mod is not string %}
+  {% for module in apache_mod %}
+LoadModule {{ module }}_module modules/mod_{{ module }}.so
+  {% endfor %}
+{% elif apache_mod is defined %}
+LoadModule {{ apache_mod }}_module modules/mod_{{ apache_mod }}.so
+{% endif %}

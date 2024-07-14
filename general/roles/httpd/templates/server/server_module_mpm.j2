@@ -1,0 +1,74 @@
+{% if apache_mpm is defined and (apache_mpm == 'event' or apache_mpm == 'worker') %}
+<IfModule mpm_{{ apache_mpm }}_module>
+    {% if apache_mpm_server_limit is defined %}
+    ServerLimit {{ apache_mpm_server_limit }}
+    {% endif %}
+    {% if apache_mpm_start_servers is defined %}
+    StartServers {{ apache_mpm_start_servers }}
+    {% endif %}
+    {% if apache_mpm_max_request_workers is defined %}
+    MaxRequestWorkers {{ apache_mpm_max_request_workers }}
+    {% endif %}
+    {% if apache_mpm_min_spare_threads is defined %}
+    MinSpareThreads {{ apache_mpm_min_spare_threads }}
+    {% endif %}
+    {% if apache_mpm_max_spare_threads is defined %}
+    MaxSpareThreads {{ apache_mpm_max_spare_threads }}
+    {% endif %}
+    {% if apache_mpm_threads_per_child is defined %}
+    ThreadsPerChild {{ apache_mpm_threads_per_child }}
+    {% endif %}
+    {% if apache_mpm_max_connections_per_child is defined %}
+    MaxConnectionsPerChild {{ apache_mpm_max_connections_per_child }}
+    {% endif %}
+    {% if apache_max_mem_free is defined %}
+    MaxMemFree {{ apache_max_mem_free }}
+    {% endif %}
+    {% if apache_send_buffer_size is defined %}
+    SendBufferSize {{ apache_send_buffer_size }}
+    {% endif %}
+    {% if apache_recv_buffer_size is defined %}
+    ReceiveBufferSize {{ apache_recv_buffer_size }}
+    {% endif %}
+    {% if apache_mpm_thread_limit is defined %}
+    ThreadLimit {{ apache_mpm_thread_limit }}
+    {% endif %}
+    {% if apache_mpm_graceful_shutdown_timeout is defined %}
+    GracefulShutdownTimeout  {{ apache_mpm_graceful_shutdown_timeout }}
+    {% endif %}
+</IfModule>
+{% endif %}
+{% if apache_mpm == 'prefork' %}
+<IfModule mpm_prefork_module>
+    {% if apache_mpm_server_limit is defined %}
+    ServerLimit {{ apache_mpm_server_limit }}
+    {% endif %}
+    {% if apache_mpm_max_request_workers is defined %}
+    MaxRequestWorkers {{ apache_mpm_max_request_workers }}
+    {% endif %}
+    {% if apache_mpm_start_servers is defined %}
+    StartServers {{ apache_mpm_start_servers }}
+    {% endif %}
+    {% if apache_mpm_min_spare_servers is defined %}
+    MinSpareServers {{ apache_mpm_min_spare_servers }}
+    {% endif %}
+    {% if apache_mpm_max_spare_servers is defined %}
+    MaxSpareServers {{ apache_mpm_max_spare_servers }}
+    {% endif %}
+    {% if apache_mpm_max_connections_per_child is defined %}
+    MaxConnectionsPerChild {{ apache_mpm_max_connections_per_child }}
+    {% endif %}
+    {% if apache_max_mem_free is defined %}
+    MaxMemFree {{ apache_max_mem_free }}
+    {% endif %}
+    {% if apache_send_buffer_size is defined %}
+    SendBufferSize {{ apache_send_buffer_size }}
+    {% endif %}
+    {% if apache_recv_buffer_size is defined %}
+    ReceiveBufferSize {{ apache_recv_buffer_size }}
+    {% endif %}
+    {% if apache_mpm_graceful_shutdown_timeout is defined %}
+    GracefulShutdownTimeout  {{ apache_mpm_graceful_shutdown_timeout }}
+    {% endif %}
+</IfModule>
+{% endif %}

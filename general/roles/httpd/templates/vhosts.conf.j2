@@ -1,0 +1,136 @@
+#jinja2:lstrip_blocks: True
+{# If apache_listen_directive variable is defined use only those #}
+{% if apache_listen_directive is defined %}
+    {% if apache_listen_directive is iterable and apache_listen_directive is not string %}
+        {% for listen in apache_listen_directive %}
+Listen {{ listen }}
+        {% endfor %}
+   {% else %}
+Listen {{ apache_listen_directive }}
+   {% endif %}
+{# Else fill list of listen-directives dynamically according to vhost.listen_ip's #}
+{% else -%}
+    {%- set listen_ip_strings = [] -%}
+    {% for vhost in apache_vhosts -%}
+        {% if vhost.listen_ip is defined -%}
+            {% if vhost.listen_ip is iterable and vhost.listen_ip is not string -%}
+                {% for ip in vhost.listen_ip -%}
+                    {%- if ip.split(":")[0] == "*" -%}
+                        {{- listen_ip_strings.append(ip.split(":")[1]) -}}
+                    {%- else -%}
+                        {{- listen_ip_strings.append(ip) -}}
+                    {%- endif %}
+                {%- endfor %}
+            {% elif vhost.listen_ip.split(":")[0] == "*" -%}
+                {{- listen_ip_strings.append(vhost.listen_ip.split(":")[1]) -}}
+            {%- else -%}
+                {{- listen_ip_strings.append(vhost.listen_ip) -}}
+            {%- endif %}
+        {% else -%}
+            {{- listen_ip_strings.append("80") -}}
+        {%- endif %}
+        {% if apache_listen_lo is defined -%}
+            {{- listen_ip_strings.append(apache_listen_lo) -}}
+        {%- elif ansible_lo.ipv4 is defined and ansible_lo.ipv6 is defined -%}
+            {{- listen_ip_strings.append("localhost:80") -}}
+        {%- elif ansible_lo.ipv4 is not defined and ansible_lo.ipv6 is defined -%}
+            {{- listen_ip_strings.append("::1:80") -}}
+        {%- elif ansible_lo.ipv4 is defined and ansible_lo.ipv6 is not defined -%}
+            {{- listen_ip_strings.append("127.0.0.1:80") -}}
+        {%- endif -%}
+    {%- endfor %}
+{#
+        ↑ http  ###############  https ↓
+#}
+    {% for vhost in apache_vhosts -%}
+        {% if vhost.ssl is defined -%}
+            {% if vhost.ssl_listen_ip is defined and vhost.ssl_listen_ip is iterable and vhost.ssl_listen_ip is not string -%}
+                {% for ip in vhost.ssl_listen_ip -%}
+                    {% if ip.split(":")[0] == "*" %}
+                        {{ listen_ip_strings.append(ip.split(":")[1]) }}
+                    {% else -%}
+                        {{- listen_ip_strings.append(ip) -}}
+                    {% endif %}
+                {%- endfor %}
+            {% elif vhost.ssl_listen_ip is defined and vhost.ssl_listen_ip.split(":")[0] == "*" -%}
+                {{ listen_ip_strings.append(vhost.ssl_listen_ip.split(":")[1]) }}
+            {% else %}
+                {{ listen_ip_strings.append("443") }}
+            {%- endif %}
+        {%- endif %}
+    {% endfor %}
+{# Write listen-directives #}
+
+    {% for ip in listen_ip_strings | unique | sort if not (ip.split(":")[0] == "_default_") -%}
+        {% if ip.split(":") | length == 2 and ip.split(":")[1] not in listen_ip_strings and ip.split(":")[0] not in listen_ip_strings -%}
+Listen {{ ip }}
+        {% elif ip.split(":") | length == 1 %}
+Listen {{ ip }}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<VirtualHost 127.0.0.1:80 [::1]:80>
+  <Location /server-status>
+    SetHandler server-status
+    Require ip 127.0.0.1 172.16.0.0/12 ::1
+    {% if apache_srv_stat_ip is defined %}
+	    {% for stat_ip in apache_srv_stat_ip %}
+    Require ip {{ stat_ip }}
+    	    {% endfor %}
+    {% endif %}
+  </Location>
+</VirtualHost>
+
+{% for vhost in apache_vhosts %}
+    {% if vhost.ssl is defined %}
+        {% if vhost.ssl_only is not defined %}
+    {% include 'vhost/vhost_base80.j2' %}
+
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+</VirtualHost>
+        {% endif %}
+
+    {% include 'vhost/vhost_base443.j2' %}
+    {% include 'vhost/vhost_server_opts.j2' %}
+    {% include 'vhost/vhost_module.j2' %}
+    {% include 'vhost/vhost_location.j2' %}
+    {% include 'vhost/vhost_directory.j2' %}
+    {% include 'vhost/vhost_files.j2' %}
+    {% include 'vhost/vhost_files_match.j2' %}
+    {% include 'vhost/vhost_if.j2' %}
+    {% include 'vhost/vhost_if_module.j2' %}
+    {% include 'vhost/vhost_rewrite.j2' %}
+    {% include 'vhost/vhost_proxy.j2' %}
+    {% include 'vhost/vhost_php_misc.j2' %}
+    {% include 'vhost/vhost_ssl.j2' %}
+    {% include 'vhost/vhost_log.j2' %}
+
+</VirtualHost>
+
+{#                                               #}
+{# ↑ in case ssl is on (results in two vHosts) ↑ #}
+{#################################################}
+{# ↓ in case no ssl is needed (only one vHost) ↓ #}
+{#                                               #}
+    {% else %}
+    {% include 'vhost/vhost_base80.j2' %}
+    {% include 'vhost/vhost_server_opts.j2' %}
+    {% include 'vhost/vhost_module.j2' %}
+    {% include 'vhost/vhost_location.j2' %}
+    {% include 'vhost/vhost_directory.j2' %}
+    {% include 'vhost/vhost_files.j2' %}
+    {% include 'vhost/vhost_files_match.j2' %}
+    {% include 'vhost/vhost_if.j2' %}
+    {% include 'vhost/vhost_if_module.j2' %}
+    {% include 'vhost/vhost_rewrite.j2' %}
+    {% include 'vhost/vhost_proxy.j2' %}
+    {% include 'vhost/vhost_php_misc.j2' %}
+    {% include 'vhost/vhost_log.j2' %}
+
+</VirtualHost>
+    {% endif %}
+
+{% endfor %}

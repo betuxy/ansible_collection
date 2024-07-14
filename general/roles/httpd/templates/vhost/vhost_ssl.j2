@@ -1,0 +1,20 @@
+    SSLEngine on
+    SSLProtocol {{ vhost.ssl.protocol | default(apache_ssl_protocol) }}
+
+    SSLCipherSuite {{ vhost.ssl.cipher_suite | default(apache_ssl_cipher_suite) }}
+    SSLHonorCipherOrder {{ vhost.ssl.honor_cipher_order | default("on") }}
+    SSLCompression {{ vhost.ssl.compression | default("off") }}
+{% if vhost.ssl.insecure_renegotiation is defined %}
+    SSLInsecureRenegotiation {{ vhost.ssl.insecure_renegotiation }}
+{% endif %}
+    SSLCertificateFile {{ vhost.ssl.cert_file }}
+    SSLCertificateKeyFile {{ vhost.ssl.cert_key }}
+{% if vhost.ssl.cert_chain is defined %}
+    SSLCertificateChainFile {{ vhost.ssl.cert_chain }}
+{% endif %}
+
+{% if vhost.ssl.options is defined and vhost.ssl.options is iterable and vhost.ssl.options is not string %}
+    SSLOptions{% for option in vhost.ssl.options %} {{ option }}{% endfor %}
+{% elif vhost.ssl.options is defined %}
+    SSLOptions {{ vhost.ssl.options }}
+{% endif %}

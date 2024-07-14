@@ -1,0 +1,13 @@
+---
+- name: restart apache
+  ansible.builtin.systemd:
+    name: "{{ apache_service }}"
+    state: restarted
+
+- name: check apache config
+  ansible.builtin.command: 'httpd -t'
+
+- name: reload apache
+  ansible.builtin.systemd:
+    name: "{{ apache_service }}"
+    state: reloaded

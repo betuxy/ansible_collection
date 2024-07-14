@@ -1,0 +1,59 @@
+{% if vhost.ssl_proxy_engine is defined %}
+    SSLProxyEngine {{ vhost.ssl_proxy_engine }}
+{% endif %}
+{% if vhost.ssl_proxy_verify is defined %}
+    SSLProxyVerify {{ vhost.ssl_proxy_verify }}
+{% endif %}
+{% if vhost.ssl_proxy_check_peer_cn is defined %}
+    SSLProxyCheckPeerCN {{ vhost.ssl_proxy_check_peer_cn }}
+{% endif %}
+{% if vhost.ssl_proxy_check_peer_name is defined %}
+    SSLProxyCheckPeerName {{ vhost.ssl_proxy_check_peer_name }}
+{% endif %}
+{% if vhost.ssl_proxy_check_peer_expire is defined %}
+    SSLProxyCheckPeerExpire {{ vhost.ssl_proxy_check_peer_expire }}
+{% endif %}
+{% if vhost.ssl_proxy_protocol is defined %}
+    SSLProxyProtocol {{ vhost.ssl_proxy_protocol }}
+{% endif %}
+{% if vhost.use_canonical_name is defined %}
+    UseCanonicalName {{ vhost.use_canonical_name }}
+{% endif %}
+{% if vhost.proxy_pass is defined and vhost.proxy_pass is iterable and vhost.proxy_pass is not string %}
+    {% for ppass in vhost.proxy_pass %}
+    ProxyPass {{ ppass }}
+
+    {% endfor %}
+{% elif vhost.proxy_pass is defined %}
+    ProxyPass {{ vhost.proxy_pass }}
+
+{% endif %}
+{% if vhost.proxy_preserve_host is defined and vhost.proxy_preserve_host is sameas true %}
+    ProxyPreserveHost On
+
+{% endif %}
+{% if vhost.proxy_pass_reverse is defined and vhost.proxy_pass_reverse is iterable and vhost.proxy_pass_reverse is not string %}
+    {% for ppass in vhost.proxy_pass_reverse %}
+    ProxyPassReverse {{ ppass }}
+    {% endfor %}
+{% elif vhost.proxy_pass_reverse is defined %}
+    ProxyPassReverse {{ vhost.proxy_pass_reverse }}
+
+{% endif %}
+{% if vhost.proxy_timeout is defined %}
+    ProxyTimeout {{ vhost.proxy_timeout }}
+{% endif %}
+{% if vhost.proxy is defined %}
+    {% for proxy in vhost.proxy %}
+    <Proxy "{{ proxy.path }}">
+        {% if proxy.proxy_set is defined and proxy.proxy_set is iterable and proxy.proxy_set is not string %}
+            {% for set in proxy.proxy_set %}
+        ProxySet {{ set }}
+            {% endfor %}
+        {% elif proxy.proxy_set is defined %}
+        ProxySet {{ proxy.proxy_set }}
+        {% endif %}
+    </Proxy>
+
+    {% endfor %}
+{% endif %}

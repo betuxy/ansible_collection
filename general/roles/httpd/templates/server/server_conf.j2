@@ -1,0 +1,43 @@
+{% if apache_header is defined and apache_header is iterable and apache_header is not string %}
+    {% for header in apache_header %}
+Header {{ header }}
+    {% endfor %}
+{% elif apache_header is defined %}
+Header {{ apache_header }}
+{% endif %}
+{% if apache_keep_alive is defined %}
+KeepAlive {{ apache_keep_alive }}
+{% endif %}
+{% if apache_hostname_lookups is defined %}
+HostnameLookups {{ apache_hostname_lookups }}
+{% endif %}
+{% if apache_timeout is defined %}
+TimeOut {{ apache_timeout }}
+{% endif %}
+{% if apache_proxy_timeout is defined %}
+ProxyTimeout {{ apache_proxy_timeout }}
+{% endif %}
+{% if apache_options is defined and apache_options is iterable and apache_options is not string %}
+Options{% for option in apache_options %} {{ option }}{% endfor %}
+{% elif apache_options is defined %}
+Options {{ apache_options }}
+
+{% endif %}
+{% if apache_remote_ip_header is defined %}
+RemoteIpHeader {{ apache_remote_ip_header }}
+{% endif %}
+{% if apache_trace_enable is defined %}
+TraceEnable {{ apache_trace_enable }}
+{% endif %}
+{% if apache_server_signature is defined %}
+ServerSignature {{ apache_server_signature }}
+{% endif %}
+{% if apache_server_tokens is defined %}
+ServerTokens {{ apache_server_tokens }}
+{% endif %}
+{% if apache_extended_status is defined %}
+ExtendedStatus {{ apache_extended_status }}
+{% endif %}
+{% if apache_use_canonical_name is defined %}
+UseCanonicalName {{ apache_use_canonical_name }}
+{% endif %}

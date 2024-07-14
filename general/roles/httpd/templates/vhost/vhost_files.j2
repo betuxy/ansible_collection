@@ -1,0 +1,30 @@
+{% if vhost.files is defined %}
+    {% for match in vhost.files %}
+    <Files "{{ match.pattern }}">
+        {% if match.handler is defined %}
+        SetHandler "{{ match.handler }}:{{ match.fpm_port }}"
+        {% endif %}
+        {% if match.setenvif is defined %}
+        SetEnvIf {{ match.setenvif }}
+        {% endif %}
+        {% if match.header is defined and match.header is iterable and match.header is not string %}
+            {% for header in match.header %}
+        Header {{ header }}
+            {% endfor %}
+        {% elif match.header is defined %}
+        Header {{ match.header }}
+        {% endif %}
+        {% if match.options is defined and match.options is iterable and match.options is not string %}
+        Options{% for option in match.options %} {{ option }}{% endfor %}
+        {% elif match.options is defined %}
+        Options {{ match.options }}
+        {% endif %}
+        {% if match.ssl_options is defined and match.ssl_options is iterable and match.ssl_options is not string %}
+        SSLOptions{% for option in match.ssl_options %} {{ option }}{% endfor %}
+        {% elif match.ssl_options is defined %}
+        SSLOptions {{ match.ssl_options }}
+        {% endif %}
+    </Files>
+
+    {% endfor %}
+{% endif %}

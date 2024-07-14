@@ -1,0 +1,15 @@
+# ANSIBLE MANAGED
+
+# httpd startup options
+#OPTIONS=
+
+# start httpd with "C" locale
+LANG=C
+
+# Set umask
+umask {{ apache_umask }}
+{% if apache_fcgi_max_requests is defined %}
+
+# Set PHP_FCGI_MAX_REQUESTS
+PHP_FCGI_MAX_REQUESTS={{ apache_fcgi_max_requests }}
+{% endif %}

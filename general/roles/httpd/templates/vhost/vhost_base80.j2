@@ -1,0 +1,11 @@
+<VirtualHost{% if vhost.listen_ip is defined and vhost.listen_ip is iterable and vhost.listen_ip is not string %}{% for ip in vhost.listen_ip %} {{ ip }}{% endfor %}{% elif vhost.listen_ip is defined %} {{ vhost.listen_ip }}{% elif apache_listen_ip is defined and apache_listen_ip is iterable and apache_listen_ip is not string %}{% for ip in apache_listen_ip %} {{ ip }}{% endfor %}{% else %} {{ apache_listen_ip }}{% endif %}>
+    ServerName {{ vhost.servername }}
+{% if vhost.serveralias is defined and vhost.serveralias is iterable and vhost.serveralias is not string %}
+    {% for alias in vhost.serveralias %}
+    ServerAlias {{ alias }}
+    {% endfor %}
+
+{% elif vhost.serveralias is defined %}
+    ServerAlias {{ vhost.serveralias }}
+
+{% endif %}

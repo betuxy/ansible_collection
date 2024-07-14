@@ -1,0 +1,86 @@
+{% if vhost.serveradmin is defined %}
+    ServerAdmin {{ vhost.serveradmin }}
+{% endif %}
+    DocumentRoot "{{ vhost.document_root | default('/var/www/vhosts/' ~ vhost.servername ~ '/htdocs') | regex_replace('\\/$', '') }}"
+{% if vhost.set_env is defined %}
+    SetEnv {{ vhost.set_env }}
+
+{% endif %}
+{% if vhost.set_env_if is defined %}
+    SetEnvIf {{ vhost.set_env_if }}
+
+{% endif %}
+{% if vhost.alias is defined and vhost.alias is iterable and vhost.alias is not string %}
+    {% for alias in vhost.alias %}
+    Alias {{ alias }}
+    {% endfor %}
+{% elif vhost.alias is defined %}
+    Alias {{ vhost.alias }}
+{% endif %}
+{% if vhost.script_alias is defined and vhost.script_alias is iterable and vhost.script_alias is not string %}
+    {% for script_alias in vhost.script_alias %}
+    ScriptAlias {{ script_alias }}
+
+    {% endfor %}
+{% elif vhost.script_alias is defined %}
+    ScriptAlias {{ vhost.script_alias }}
+
+{% endif %}
+{% if vhost.fcgid_wrapper is defined %}
+    FcgidWrapper {{ vhost.fcgid_wrapper }}
+{% endif %}
+{% if vhost.directory_index is defined %}
+    DirectoryIndex {{ vhost.directory_index }}
+{% endif %}
+{% if vhost.use_canonical_name is defined %}
+    UseCanonicalName {{ vhost.use_canonical_name }}
+{% endif %}
+{% if vhost.header is defined and vhost.header is iterable and vhost.header is not string %}
+    {% for header in vhost.header %}
+        Header {{ header }}
+    {% endfor %}
+{% elif vhost.header is defined %}
+        Header {{ vhost.header }}
+{% endif %}
+{% if vhost.request_header is defined and vhost.request_header is iterable and vhost.request_header is not string %}
+    {% for header in vhost.request_header %}
+    RequestHeader {{ header }}
+    {% endfor %}
+{% elif vhost.request_header is defined %}
+    RequestHeader {{ vhost.request_header }}
+{% endif %}
+{% if vhost.keep_alive is defined and vhost.keepalive is sameas false %}
+    KeepAlive Off
+{% endif %}
+{% if vhost.hostname_lookups is defined %}
+    HostnameLookups {{ vhost.hostname_lookups }}
+{% endif %}
+{% if vhost.timeout is defined %}
+    TimeOut {{ vhost.timeout }}
+{% endif %}
+{% if vhost.options is defined and vhost.options is iterable and vhost.options is not string %}
+    Options{% for option in vhost.options %} {{ option }}{% endfor %}
+{% elif vhost.options is defined %}
+    Options {{ vhost.options }}
+{% endif %}
+{% if vhost.browser_match is defined and vhost.browser_match is iterable and vhost.browser_match is not string %}
+    {% for match in vhost.browser_match %}
+    BrowserMatch {{ match }}
+    {% endfor %}
+{% elif vhost.browser_match is defined %}
+    BrowserMatch {{ vhost.browser_match }}
+{% endif %}
+{% if vhost.server_signature is defined %}
+    ServerSignature {{ vhost.server_signature }}
+{% endif %}
+{% if vhost.remote_ip_header is defined %}
+    RemoteIpHeader {{ vhost.remote_ip_header }}
+{% endif %}
+
+{% if vhost.redirect is defined and vhost.redirect is iterable and vhost.redirect is not string %}
+    {% for redirect in vhost.redirect %}
+    Redirect {{ redirect }}
+    {% endfor %}
+{% elif vhost.redirect is defined %}
+    Redirect {{ vhost.redirect }}
+{% endif %}

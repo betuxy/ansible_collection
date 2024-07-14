@@ -1,0 +1,31 @@
+{% if vhost.php_admin_value is defined and vhost.php_admin_value is iterable and vhost.php_admin_value is not string %}
+    {% for adm_val in vhost.php_admin_value %}
+    php_admin_value {{ adm_val }}
+    {% endfor %}
+
+{% elif vhost.php_admin_value is defined %}
+    php_admin_value {{ vhost.php_admin_value }}
+{% endif %}
+{% if vhost.php_value is defined and vhost.php_value is iterable and vhost.php_value is not string %}
+    {% for val in vhost.php_value %}
+    php_value {{ val }}
+    {% endfor %}
+
+{% elif vhost.php_value is defined %}
+    php_value {{ vhost.php_value }}
+{% endif %}
+{% if vhost.php_admin_flag is defined and vhost.php_admin_flag is iterable and vhost.php_admin_flag is not string %}
+    {% for adm_flag in vhost.php_admin_flag %}
+    php_admin_flag {{ adm_flag }}
+    {% endfor %}
+{% elif vhost.php_admin_flag is defined %}
+    php_admin_flag {{ vhost.php_admin_flag }}
+{% endif %}
+{% if vhost.php_flag is defined and vhost.php_flag is iterable and vhost.php_flag is not string %}
+    {% for flag in vhost.php_flag %}
+    php_flag {{ flag }}
+    {% endfor %}
+
+{% elif vhost.php_flag is defined %}
+    php_flag {{ vhost.php_flag }}
+{% endif %}
