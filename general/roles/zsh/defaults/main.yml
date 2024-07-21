@@ -1,0 +1,16 @@
+---
+# defaults file for zsh
+omz_url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+
+omz_default_aliases:
+  - "alias gdiff='git diff HEAD^ HEAD'"
+  - "alias gic='git clone'"
+  - "alias grsh='git reset --soft HEAD^'"
+  - "alias gcam='git commit -am'"
+  - "alias gl='git pull'"
+  - "alias gp='git push'"
+  - "alias gst='git status'"
+  - "alias gba='git branch -a'"
+  - "alias glpg=\"git log --pretty='%h - %cn, %cr: %s' --graph\""
+  - "alias gcamp='gcam ${1} && git push'"
+  - "alias gaa='git add .'"

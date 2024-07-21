@@ -1,0 +1,78 @@
+---
+- name: Install dependencies
+  ansible.builtin.package:
+    name:
+      - zsh
+      - curl
+      - git
+    state: present
+
+- name: Define omz users
+  ansible.builtin.set_fact:
+    omz_users: "{{ omz_users | d([]) + ['root'] | flatten }}"
+
+- name: Check for oh-my-zsh installation
+  ansible.builtin.stat:
+    path: "/{{ item if item == 'root' else 'home/' + item }}/.oh-my-zsh"
+  register: _omz
+  loop: "{{ omz_users }}"
+
+- name: Download install script
+  ansible.builtin.get_url:
+    url: "{{ omz_url }}"
+    dest: /tmp/
+    mode: "0777"
+  changed_when: false
+  register: _omz_install_dest
+
+- name: Install omz for configured users
+  ansible.builtin.shell: |
+    export HOME="/{{ user.item if user.item == 'root' else 'home/' + user.item }}"
+    sh /tmp/install.sh --unattended
+  loop: "{{ _omz.results }}"
+  loop_control:
+    loop_var: user
+  when: not user.stat.exists
+  become: yes
+  become_user: "{{ user.item }}"
+
+- name: Change default shell for omz users
+  ansible.builtin.user:
+    name: "{{ user.item }}"
+    shell: /usr/bin/zsh
+  loop: "{{ _omz.results }}"
+  loop_control:
+    loop_var: user
+  when: not user.stat.exists
+
+- name: Use custom zsh theme
+  block:
+    - name: Create directory structure
+      ansible.builtin.file:
+        path: "/{{ item if item == 'root' else 'home/' + item }}/.oh-my-zsh/custom/themes"
+        owner: "{{ item }}"
+        group: "{{ item }}"
+      loop: "{{ omz_users }}"
+
+    - name: Copy theme
+      ansible.builtin.copy:
+        src: personal.zsh-theme
+        dest: "/{{ item if item == 'root' else 'home/' + item }}/.oh-my-zsh/custom/themes/personal.zsh-theme"
+        owner: "{{ item }}"
+        group: "{{ item }}"
+      loop: "{{ omz_users }}"
+
+    - name: Select custom theme in .zshrc
+      ansible.builtin.lineinfile:
+        path: "/{{ item if item == 'root' else 'home/' + item }}/.zshrc"
+        regexp: '^ZSH_THEME=.*'
+        line: ZSH_THEME="personal"
+      loop: "{{ omz_users }}"
+
+- name: Add relevant aliases
+  ansible.builtin.lineinfile:
+    path: "/{{ item[0] if item[0] == 'root' else 'home/' + item[0] }}/.zshrc"
+    line: "{{ item[1] }}"
+    regexp: "{{ item[1].split('=')[0] }}=.*"
+  loop: "{{ omz_users | product(omz_default_aliases + omz_aliases | d([])) | list}}"
+

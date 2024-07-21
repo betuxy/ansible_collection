@@ -1,0 +1,10 @@
+---
+galaxy_info:
+  author: betuxy
+  description: Install zsh and oh-my-zsh framework
+
+  license: GPL-2.0-or-later
+
+  min_ansible_version: "5"
+
+dependencies: []
