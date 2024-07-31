@@ -15,7 +15,6 @@ systemd.network is used to define and configure network settings for specific ne
 
 Known Issues
 ------------
-- Alma8 Pipeline currently failing and commented out.<br>[Propably due to kernel/systemd version mismatch as the k8s-int-workerXX is still C7.](https://github.com/systemd/systemd/blob/de7436b02badc82200dc127ff190b8155769b8e7/README#L35C27-L35C27)
 - On the first rollout on a new system there is a chance that the role gets stuck on reloading the network kernel modules. Somehow the routes are not always updated, despite reloading the network stack. In that case reboot the OS.
 
 Requirements
